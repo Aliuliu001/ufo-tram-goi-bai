@@ -12,15 +12,15 @@
 - [x] A5. Kiểm tra 3D trực tiếp trên GitHub Pages ở 1280×633: canvas Three.js, 5 nhãn học sinh, tuần tra và cảnh tia hút sau khi gọi đều hoạt động. Bố cục đáp ứng đã có cho màn hình hẹp; sẽ rà tiếp 1366×768 ở đợt chỉnh giao diện.
 
 ## Giai đoạn B — Vòng dò tìm, góc nhìn và bắt lên tàu
-- [ ] B1. Thêm ba góc nhìn: Toàn cảnh, Theo dấu UFO, Góc phố.
-- [ ] B2. Làm chuyển camera mượt; Toàn cảnh còn kéo-xoay/zoom được.
-- [ ] B3. Thêm `− / +` chọn số bạn lên tàu, giới hạn theo số bạn còn sẵn sàng.
-- [ ] B4. Thêm công tắc Không gọi trùng và hành vi làm vòng mới khi đã gọi đủ.
-- [ ] B5. Thêm điều khiển Thời gian dò 3–20 giây và đồng hồ đếm ngược.
-- [ ] B6. Làm cảnh dò: UFO đổi nhiều mục tiêu, tên được rọi sáng nhưng chưa lộ kết quả.
-- [ ] B7. Khi về 0 giây, hút lần lượt đúng số bạn đã chọn rồi mới hiện tên/biểu tượng kết quả.
-- [ ] B8. Viết kiểm tra tự động: giới hạn số lượng, không trùng, kết quả chỉ lộ sau đếm ngược.
-- [ ] B9. Kiểm tra thật trên Pages: ba góc nhìn; 3/6/20 giây; bắt 1/nhiều bạn.
+- [x] B1. Thêm ba góc nhìn: Toàn cảnh, Theo dấu UFO, Góc phố.
+- [x] B2. Làm chuyển camera mượt; Toàn cảnh còn kéo-xoay/zoom được.
+- [x] B3. Thêm `− / +` chọn số bạn lên tàu, giới hạn theo số bạn còn sẵn sàng.
+- [x] B4. Thêm công tắc Không gọi trùng và hành vi làm vòng mới khi đã gọi đủ.
+- [x] B5. Thêm điều khiển Thời gian dò nhanh 6/8/10 giây và đồng hồ đếm ngược.
+- [x] B6. Làm cảnh dò: UFO đổi nhiều mục tiêu, tên được rọi sáng nhưng chưa lộ kết quả.
+- [x] B7. Khi về 0 giây, hút lần lượt đúng số bạn đã chọn rồi mới hiện tên/biểu tượng kết quả.
+- [x] B8. Viết và chạy kiểm tra tự động: giới hạn số lượng, không trùng, mục tiêu đổi khi dò, kết quả chỉ lộ sau đếm ngược.
+- [ ] B9. Kiểm tra thật trên Pages: ba góc nhìn; 6/8/10 giây; bắt 1/nhiều bạn (chờ bản online cập nhật).
 
 ## Giai đoạn C — Quản lý lớp, học sinh, ảnh và skin
 - [ ] C1. Đặt Danh sách lớp + Phi hành đoàn ngoài màn chơi; bấm tên để tạm nghỉ/tham gia, có Bật tất cả.

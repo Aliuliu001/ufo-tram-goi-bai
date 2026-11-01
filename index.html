@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090e28">
   <title>UFO Trạm Gọi Bài</title>
-  <link rel="stylesheet" href="css/app.css?v=2">
+  <link rel="stylesheet" href="css/app.css?v=3">
 </head>
 <body>
   <main class="app-shell">
@@ -27,10 +27,16 @@
       <div class="stage-footer"><span>SKIN: <b id="skin-name">Thám hiểm Sao Mộc</b></span><button class="tiny-button" id="skin-button" type="button">🎨 Đổi skin</button></div>
     </section>
 
-    <section class="controls panel">
-      <div><p class="eyebrow">BẢNG ĐIỀU KHIỂN</p><h2>Gọi một phi hành gia lên trạm</h2><p class="muted">Mỗi bạn chỉ được gọi một lần trước khi bắt đầu lượt mới.</p></div>
-      <div class="control-actions"><button class="primary-button" id="call-button" type="button">🎲 Gọi học sinh</button><button class="secondary-button" id="reset-button" type="button">↻ Làm lại lượt</button></div>
+    <section class="controls panel scan-controls">
+      <div><p class="eyebrow">BẢNG ĐIỀU KHIỂN</p><h2 id="scan-title">Chuẩn bị chiến dịch bắt học sinh</h2><p class="muted" id="scan-help">Nhấn Space để bắt đầu · Cơ hội như nhau cho tất cả học sinh.</p></div>
+      <div class="scan-settings">
+        <div class="setting-box"><span>SỐ BẠN LÊN TÀU</span><div class="stepper"><button id="pick-dec" type="button">−</button><b id="pick-count">1</b><button id="pick-inc" type="button">+</button></div></div>
+        <button class="toggle-setting on" id="no-repeat" type="button" aria-pressed="true"><b>Không gọi trùng</b><small>Ai cũng có cơ hội</small></button>
+        <div class="setting-box"><span>THỜI GIAN DÒ</span><div class="time-choices"><button data-seconds="6" class="selected" type="button">6s <small>Chuẩn</small></button><button data-seconds="8" type="button">8s</button><button data-seconds="10" type="button">10s</button></div></div>
+      </div>
+      <div class="control-actions"><button class="primary-button" id="call-button" type="button">🚀 Bắt đầu dò tìm</button><button class="secondary-button" id="reset-button" type="button">↻ Làm lại lượt</button></div>
     </section>
+    <section class="camera-bar panel"><span class="eyebrow">GÓC NHÌN 3D</span><div class="camera-options"><button data-camera="overview" class="selected" type="button">◉ Toàn cảnh</button><button data-camera="follow" type="button">🛸 Theo dấu UFO</button><button data-camera="street" type="button">⌂ Góc phố</button></div><strong id="scan-timer">6 GIÂY<br><small>SẴN SÀNG DÒ TÌM</small></strong></section>
 
     <section class="queue panel"><div><p class="eyebrow">DANH SÁCH TÍN HIỆU</p><h2>Các bạn còn chờ</h2></div><div id="student-list" class="student-list"></div></section>
   </main>
@@ -38,6 +44,6 @@
   <dialog id="settings-dialog" class="dialog"><form method="dialog" class="dialog-card"><div class="dialog-head"><div><p class="eyebrow">CÀI ĐẶT LỚP</p><h2>Danh sách học sinh</h2></div><button class="icon-button" aria-label="Đóng" value="cancel">×</button></div><p class="muted">Mỗi dòng một tên. Bản thử nghiệm đang dùng danh sách mẫu; sau này em sẽ thêm bảng câu hỏi và sao lưu đầy đủ.</p><textarea id="students-input" rows="9" aria-label="Danh sách học sinh"></textarea><div class="dialog-actions"><button class="secondary-button" value="cancel">Hủy</button><button class="primary-button" id="save-students-button" value="default">💾 Lưu danh sách</button></div></form></dialog>
   <dialog id="skin-dialog" class="dialog"><form method="dialog" class="dialog-card"><div class="dialog-head"><div><p class="eyebrow">TRANG PHỤC</p><h2>Chọn skin UFO</h2></div><button class="icon-button" aria-label="Đóng" value="cancel">×</button></div><div class="skin-grid" id="skin-grid"></div></form></dialog>
 
-  <script type="module" src="js/app.js?v=2"></script>
+  <script type="module" src="js/app.js?v=3"></script>
 </body>
 </html>

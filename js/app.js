@@ -1,76 +1,20 @@
-import { createRound, pickNextStudent } from './game-engine.js';
+import { createRound } from './game-engine.js';
 import { createWorld3D } from './scene3d.js';
+import { chooseScanWinners, clampPickCount, scanTargetAt } from './scan-round.js';
 
-const DEFAULT_STUDENTS = ['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy'];
-const SKINS = [
-  { id: 'jupiter', name: 'Thám hiểm Sao Mộc', accent: '#9af76d', accent2: '#6ddaf7' },
-  { id: 'rescue', name: 'Đội cứu hộ Ngân Hà', accent: '#ffbd6a', accent2: '#ff6e9b' },
-  { id: 'treasure', name: 'Thợ săn kho báu Vũ trụ', accent: '#d2a8ff', accent2: '#7ba9ff' },
-];
-
-const elements = {
-  call: document.querySelector('#call-button'), reset: document.querySelector('#reset-button'),
-  name: document.querySelector('#student-name'), status: document.querySelector('#student-status'),
-  list: document.querySelector('#student-list'), progress: document.querySelector('#progress-fill'),
-  progressLabel: document.querySelector('#progress-label'), mission: document.querySelector('#mission-text'),
-  settings: document.querySelector('#settings-dialog'), settingsOpen: document.querySelector('#settings-button'),
-  input: document.querySelector('#students-input'), save: document.querySelector('#save-students-button'),
-  skinDialog: document.querySelector('#skin-dialog'), skinOpen: document.querySelector('#skin-button'),
-  skinName: document.querySelector('#skin-name'), skinGrid: document.querySelector('#skin-grid'),
-  sound: document.querySelector('#sound-button'),
-};
-
-let students = loadStudents();
-let round = createRound(students);
-let selectedSkin = SKINS[0];
-let soundOn = true;
-let world3D = null;
-
-function loadStudents() {
-  try {
-    const saved = JSON.parse(localStorage.getItem('ufo-students'));
-    return Array.isArray(saved) && saved.length ? saved : DEFAULT_STUDENTS;
-  } catch { return DEFAULT_STUDENTS; }
-}
-function saveStudents() { try { localStorage.setItem('ufo-students', JSON.stringify(students)); } catch {} }
-function playSignal() {
-  if (!soundOn || !window.AudioContext) return;
-  const context = new AudioContext(); const oscillator = context.createOscillator(); const gain = context.createGain();
-  oscillator.frequency.setValueAtTime(480, context.currentTime); oscillator.frequency.exponentialRampToValueAtTime(740, context.currentTime + .12);
-  gain.gain.setValueAtTime(.06, context.currentTime); gain.gain.exponentialRampToValueAtTime(.001, context.currentTime + .18);
-  oscillator.connect(gain).connect(context.destination); oscillator.start(); oscillator.stop(context.currentTime + .2);
-}
-function render() {
-  const total = students.length; const done = round.called.length;
-  elements.progress.style.width = `${total ? (done / total) * 100 : 0}%`;
-  elements.progressLabel.textContent = `${done} / ${total} học sinh`;
-  elements.mission.textContent = round.isComplete && total ? 'Đã hoàn thành lượt gọi bài!' : `Còn ${round.remaining.length} bạn đang chờ tín hiệu`;
-  elements.call.disabled = round.isComplete || total === 0;
-  elements.call.textContent = round.isComplete ? '✓ Đã gọi đủ lượt' : '🎲 Gọi học sinh';
-  elements.list.innerHTML = students.map((student) => `<span class="student-chip ${round.called.includes(student) ? 'called' : ''}">${round.called.includes(student) ? '✓' : '✦'} ${student}</span>`).join('');
-}
-function callStudent() {
-  const result = pickNextStudent(round); round = result.round;
-  if (!result.student) return render();
-  elements.name.textContent = result.student;
-  elements.status.textContent = 'UFO đang quét mục tiêu, bay đến và bật tia hút…';
-  document.querySelector('#student-card').classList.remove('arrive'); requestAnimationFrame(() => document.querySelector('#student-card').classList.add('arrive'));
-  world3D?.abduct(result.student);
-  playSignal(); render();
-}
-function resetRound() { round = createRound(students); world3D?.setStudents(students); elements.name.textContent = 'Bấm để gọi học sinh'; elements.status.textContent = 'UFO sẽ chọn ngẫu nhiên, không gọi trùng trong lượt.'; render(); }
-function renderSkins() {
-  elements.skinGrid.innerHTML = SKINS.map((skin) => `<button class="skin-option ${skin.id === selectedSkin.id ? 'selected' : ''}" type="button" data-skin="${skin.id}" style="--skin-a:${skin.accent};--skin-b:${skin.accent2}"><span class="skin-preview">🛸</span><strong>${skin.name}</strong><small>${skin.id === selectedSkin.id ? 'Đang dùng' : 'Chọn skin'}</small></button>`).join('');
-}
-function selectSkin(id) { selectedSkin = SKINS.find((skin) => skin.id === id) || SKINS[0]; document.documentElement.style.setProperty('--accent', selectedSkin.accent); document.documentElement.style.setProperty('--accent-2', selectedSkin.accent2); elements.skinName.textContent = selectedSkin.name; world3D?.setSkin(selectedSkin); renderSkins(); }
-
-elements.call.addEventListener('click', callStudent); elements.reset.addEventListener('click', resetRound);
-elements.settingsOpen.addEventListener('click', () => { elements.input.value = students.join('\n'); elements.settings.showModal(); });
-elements.save.addEventListener('click', (event) => { event.preventDefault(); const next = elements.input.value.split('\n').map((name) => name.trim()).filter(Boolean); if (!next.length) { elements.input.focus(); return; } students = [...new Set(next)]; saveStudents(); resetRound(); elements.settings.close(); });
-elements.skinOpen.addEventListener('click', () => { renderSkins(); elements.skinDialog.showModal(); });
-elements.skinGrid.addEventListener('click', (event) => { const button = event.target.closest('[data-skin]'); if (!button) return; selectSkin(button.dataset.skin); elements.skinDialog.close(); });
-elements.sound.addEventListener('click', () => { soundOn = !soundOn; elements.sound.textContent = soundOn ? '🔊' : '🔇'; });
-selectSkin(selectedSkin.id); render();
-createWorld3D(document.querySelector('#world3d'), document.querySelector('#world-labels'))
-  .then((world) => { world3D = world; world3D.setStudents(students); world3D.setSkin(selectedSkin); elements.name.textContent = 'Bấm để gọi học sinh'; elements.status.textContent = 'UFO đang tuần tra. Kéo khung 3D để xoay góc nhìn.'; })
-  .catch(() => { elements.name.textContent = 'Không mở được thế giới 3D'; elements.status.textContent = 'Kiểm tra lại kết nối mạng rồi tải lại trang.'; });
+const DEFAULT_STUDENTS=['An Nhiên','Bảo Ngọc','Gia Hân','Minh Khang','Thanh Vy'];
+const SKINS=[{id:'jupiter',name:'Thám hiểm Sao Mộc',accent:'#9af76d',accent2:'#6ddaf7'},{id:'rescue',name:'Đội cứu hộ Ngân Hà',accent:'#ffbd6a',accent2:'#ff6e9b'},{id:'treasure',name:'Thợ săn kho báu Vũ trụ',accent:'#d2a8ff',accent2:'#7ba9ff'}];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const el={call:$('#call-button'),reset:$('#reset-button'),name:$('#student-name'),status:$('#student-status'),list:$('#student-list'),progress:$('#progress-fill'),progressLabel:$('#progress-label'),mission:$('#mission-text'),settings:$('#settings-dialog'),settingsOpen:$('#settings-button'),input:$('#students-input'),save:$('#save-students-button'),skinDialog:$('#skin-dialog'),skinOpen:$('#skin-button'),skinName:$('#skin-name'),skinGrid:$('#skin-grid'),sound:$('#sound-button'),pick:$('#pick-count'),dec:$('#pick-dec'),inc:$('#pick-inc'),repeat:$('#no-repeat'),timer:$('#scan-timer'),title:$('#scan-title'),help:$('#scan-help')};
+let students=loadStudents(),round=createRound(students),skin=SKINS[0],world=null,soundOn=true,pickCount=1,noRepeat=true,seconds=6,scanning=false,scanInterval=null;
+function loadStudents(){try{const x=JSON.parse(localStorage.getItem('ufo-students'));return Array.isArray(x)&&x.length?x:DEFAULT_STUDENTS}catch{return DEFAULT_STUDENTS}}
+function saveStudents(){try{localStorage.setItem('ufo-students',JSON.stringify(students))}catch{}}
+function available(){return noRepeat?round.remaining:students}
+function playSignal(){if(!soundOn||!window.AudioContext)return;const c=new AudioContext(),o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(420,c.currentTime);o.frequency.exponentialRampToValueAtTime(920,c.currentTime+.12);g.gain.setValueAtTime(.05,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.2);o.connect(g).connect(c.destination);o.start();o.stop(c.currentTime+.21)}
+function render(){const total=students.length,done=round.called.length,ready=available().length;pickCount=clampPickCount(pickCount,ready);el.progress.style.width=`${total?done/total*100:0}%`;el.progressLabel.textContent=`${done} / ${total} học sinh`;el.mission.textContent=ready?`Còn ${ready} bạn đang chờ tín hiệu`:'Đã hoàn thành lượt gọi bài!';el.pick.textContent=pickCount;el.dec.disabled=scanning||pickCount<=1;el.inc.disabled=scanning||pickCount>=Math.max(1,ready);el.call.disabled=scanning||!ready;el.call.textContent=scanning?'🔎 Đang dò tìm…':ready?'🚀 Bắt đầu dò tìm':'✓ Đã gọi đủ lượt';el.list.innerHTML=students.map(x=>`<span class="student-chip ${noRepeat&&round.called.includes(x)?'called':''}">${noRepeat&&round.called.includes(x)?'✓':'✦'} ${x}</span>`).join('');el.help.textContent=`Nhấn Space để bắt đầu · Dò tìm trong ${seconds} giây · Cơ hội như nhau cho ${ready} học sinh.`}
+function setTimer(left,mode='SẴN SÀNG DÒ TÌM'){el.timer.innerHTML=`${left} GIÂY<br><small>${mode}</small>`}
+function startScan(){if(scanning||!available().length)return;scanning=true;const pool=available(), winners=chooseScanWinners(pool,pickCount);let remaining=seconds,tick=0;el.name.textContent='ĐANG DÒ TÌM…';el.status.textContent='UFO đổi mục tiêu liên tục. Kết quả được giữ bí mật đến giây cuối.';el.title.textContent='UFO đang quét khu phố';world?.beginScan(pool);render();setTimer(remaining,'ĐANG DÒ TÌM');playSignal();scanInterval=setInterval(()=>{tick++;remaining--;const target=scanTargetAt(pool,tick,.55);world?.scanTarget(target);el.status.textContent=`Đang quét tín hiệu quanh ${target}…`;setTimer(Math.max(0,remaining),'ĐANG DÒ TÌM');if(remaining<=0){clearInterval(scanInterval);finishScan(winners)}},1000)}
+function finishScan(winners){el.name.textContent='ĐANG KHÓA TÍN HIỆU…';el.status.textContent='UFO đã khóa kết quả. Tên sẽ được công bố sau khi hút xong.';world?.finishScan(winners,()=>{winners.forEach(x=>{if(noRepeat&&!round.called.includes(x))round.called.push(x)});round.remaining=students.filter(x=>!round.called.includes(x));round.isComplete=round.remaining.length===0;scanning=false;world?.setStudents(students.filter(x=>!noRepeat||!round.called.includes(x)));el.name.textContent=winners.join(' · ');el.status.textContent='Đã lên tàu thành công!';setTimer(seconds,'HOÀN THÀNH NHIỆM VỤ');el.title.textContent='Đã công bố kết quả';render()})}
+function reset(){clearInterval(scanInterval);scanning=false;round=createRound(students);world?.setStudents(students);world?.cancelScan();el.name.textContent='Bấm để gọi học sinh';el.status.textContent='UFO đang tuần tra. Kéo khung 3D để xoay góc nhìn.';setTimer(seconds);render()}
+function selectSkin(id){skin=SKINS.find(x=>x.id===id)||SKINS[0];document.documentElement.style.setProperty('--accent',skin.accent);document.documentElement.style.setProperty('--accent-2',skin.accent2);el.skinName.textContent=skin.name;world?.setSkin(skin);el.skinGrid.innerHTML=SKINS.map(x=>`<button class="skin-option ${x.id===skin.id?'selected':''}" type="button" data-skin="${x.id}" style="--skin-a:${x.accent};--skin-b:${x.accent2}"><span class="skin-preview">🛸</span><strong>${x.name}</strong></button>`).join('')}
+el.call.onclick=startScan;el.reset.onclick=reset;el.dec.onclick=()=>{pickCount--;render()};el.inc.onclick=()=>{pickCount++;render()};el.repeat.onclick=()=>{noRepeat=!noRepeat;el.repeat.classList.toggle('on',noRepeat);el.repeat.setAttribute('aria-pressed',noRepeat);reset()};$$('[data-seconds]').forEach(b=>b.onclick=()=>{seconds=Number(b.dataset.seconds);$$('[data-seconds]').forEach(x=>x.classList.toggle('selected',x===b));setTimer(seconds);render()});$$('[data-camera]').forEach(b=>b.onclick=()=>{$$('[data-camera]').forEach(x=>x.classList.toggle('selected',x===b));world?.setCameraMode(b.dataset.camera)});el.settingsOpen.onclick=()=>{el.input.value=students.join('\n');el.settings.showModal()};el.save.onclick=e=>{e.preventDefault();const next=el.input.value.split('\n').map(x=>x.trim()).filter(Boolean);if(next.length){students=[...new Set(next)];saveStudents();el.settings.close();reset()}};el.skinOpen.onclick=()=>{selectSkin(skin.id);el.skinDialog.showModal()};el.skinGrid.onclick=e=>{const b=e.target.closest('[data-skin]');if(b){selectSkin(b.dataset.skin);el.skinDialog.close()}};el.sound.onclick=()=>{soundOn=!soundOn;el.sound.textContent=soundOn?'🔊':'🔇'};window.addEventListener('keydown',e=>{if(e.code==='Space'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();startScan()}});selectSkin(skin.id);setTimer(seconds);render();createWorld3D($('#world3d'),$('#world-labels')).then(x=>{world=x;world.setStudents(students);world.setSkin(skin);el.name.textContent='Bấm để gọi học sinh';el.status.textContent='UFO đang tuần tra. Kéo khung 3D để xoay góc nhìn.'}).catch(()=>{el.name.textContent='Không mở được thế giới 3D'});
