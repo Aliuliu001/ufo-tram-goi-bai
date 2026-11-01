@@ -1,12 +1,11 @@
 # UFO Trạm Gọi Bài — Context dự án
 
 ## Trạng thái hiện tại
-- Repo công khai đã tạo: `https://github.com/Aliuliu001/ufo-tram-goi-bai`.
-- Đã dựng bản khung đầu tiên: giao diện, danh sách học sinh, gọi ngẫu nhiên không trùng trong lượt, làm lại lượt và 3 skin đổi màu/giao diện.
-- **Sai lệch đã xác nhận:** sân khấu hiện tại chỉ là CSS giả chiều sâu, chưa có mô hình/camera/nhân vật Three.js 3D. Không được coi là hoàn thành yêu cầu hình ảnh 3D.
-- Đã kiểm tra cục bộ ở khung trình duyệt 1280×633: 5 học sinh được gọi đủ 5 em, không trùng; đổi skin hoạt động.
-- Bản game tham khảo ở Google Sites: `https://sites.google.com/view/ufotrmgibi3d-cucrtuingoihnhtin/full-page-embed?authuser=1&pli=1`.
-- Source repository gốc đã bị tác giả xóa; dự án mới không dựa vào repo/asset cũ.
+- Repo công khai: `https://github.com/Aliuliu001/ufo-tram-goi-bai`; game: `https://aliuliu001.github.io/ufo-tram-goi-bai/?v=2`.
+- Đã có sân khấu Three.js 3D thật: khu phố, đường, nhà/cây, sao/hành tinh, UFO, 5 phi hành gia chạy và nhãn tên nổi.
+- Đã có kéo-xoay/zoom tự do, skin đổi màu UFO/tia hút, gọi ngẫu nhiên không trùng ở bản nền.
+- Đã kiểm tra Pages ở 1280×633: canvas 3D, nhãn 5 học sinh, UFO tuần tra và cảnh hút sau khi gọi hoạt động.
+- Bản tham khảo: `https://sites.google.com/view/ufotrmgibi3d-cucrtuingoihnhtin/full-page-embed?authuser=1&pli=1`; source repo gốc đã bị tác giả xóa.
 
 ## Quyền sử dụng
 - Anh Ngọc Trương đã xin và được tác giả/đồng nghiệp cấp phép dùng, chỉnh sửa và tùy biến thoải mái.
@@ -28,10 +27,17 @@
 - Vì đã có quyền của tác giả, dự án mới có thể tái tạo lại cơ chế/mô hình đó và phát triển skin riêng. Không cần sử dụng asset cũ.
 - Khi đến phần nhiều ảnh skin: dùng IndexedDB + sao lưu JSON, không lưu ảnh lớn trong localStorage.
 
+## Quy tắc vòng dò tìm đã chốt
+- Có ba camera: **Toàn cảnh** (góc hiện tại), **Theo dấu UFO** (bám bay mềm theo UFO), **Góc phố** (thấp/cận nhân vật).
+- Giáo viên chọn được số bạn lên tàu bằng `− / +`, tối thiểu 1 và không vượt số bạn sẵn sàng.
+- Mặc định không gọi trùng: gọi hết danh sách rồi mới làm vòng mới. Có công tắc để cho phép gọi trùng khi cần.
+- Thời gian dò là lúc UFO đổi nhiều mục tiêu, rọi sáng tên từng bạn để tạo kịch tính. Kết quả ngẫu nhiên phải giữ kín cho đến hết đếm ngược.
+- Hết giờ mới khóa mục tiêu, hút lần lượt đúng số bạn đã chọn; sau đó mới hiện tên và ảnh/biểu tượng của các bạn được chọn.
+
 ## Bước tiếp theo
-1. Hoàn tất lại Giai đoạn A4b–A5: thay CSS bằng Three.js 3D thật và kiểm tra Pages.
-2. Khi 3D đã đúng, sang Giai đoạn B: thêm câu hỏi, Đúng/Sai/Bỏ qua và bảng kết quả.
-3. Chốt luật điểm bản đầu (đề xuất: Đúng +1, Sai/Bỏ qua 0).
+1. Làm B1–B2: ba góc nhìn và chuyển camera mượt.
+2. Làm B3–B5: số bạn lên tàu, chống trùng và thời gian dò.
+3. Làm B6–B9: cảnh đổi mục tiêu, hút sau khi hết giờ, kiểm tra tự động và Pages.
 
 ## Lưu ý vận hành
 - Mỗi lần GitHub Pages cập nhật, anh mở link rồi bấm `Ctrl + Shift + R` để tải bản mới.

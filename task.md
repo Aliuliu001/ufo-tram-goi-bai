@@ -11,13 +11,16 @@
 - [x] A4c. Làm camera kéo-xoay/zoom, hoạt ảnh chạy–quét–tia hút; skin đổi trên mô hình 3D.
 - [x] A5. Kiểm tra 3D trực tiếp trên GitHub Pages ở 1280×633: canvas Three.js, 5 nhãn học sinh, tuần tra và cảnh tia hút sau khi gọi đều hoạt động. Bố cục đáp ứng đã có cho màn hình hẹp; sẽ rà tiếp 1366×768 ở đợt chỉnh giao diện.
 
-## Giai đoạn B — Gọi bài
-- [ ] B1. Viết cấu trúc dữ liệu học sinh, câu hỏi, lượt và skin.
-- [ ] B2. Làm bảng nhập/sửa danh sách học sinh.
-- [ ] B3. Làm bảng nhập/sửa câu hỏi.
-- [ ] B4. Làm nút gọi học sinh ngẫu nhiên, không trùng trong một vòng.
-- [ ] B5. Làm nút Đúng/Sai/Bỏ qua và bảng kết quả.
-- [ ] B6. Viết và chạy kiểm tra tự động cho luật không trùng và làm lại vòng.
+## Giai đoạn B — Vòng dò tìm, góc nhìn và bắt lên tàu
+- [ ] B1. Thêm ba góc nhìn: Toàn cảnh, Theo dấu UFO, Góc phố.
+- [ ] B2. Làm chuyển camera mượt; Toàn cảnh còn kéo-xoay/zoom được.
+- [ ] B3. Thêm `− / +` chọn số bạn lên tàu, giới hạn theo số bạn còn sẵn sàng.
+- [ ] B4. Thêm công tắc Không gọi trùng và hành vi làm vòng mới khi đã gọi đủ.
+- [ ] B5. Thêm điều khiển Thời gian dò 3–20 giây và đồng hồ đếm ngược.
+- [ ] B6. Làm cảnh dò: UFO đổi nhiều mục tiêu, tên được rọi sáng nhưng chưa lộ kết quả.
+- [ ] B7. Khi về 0 giây, hút lần lượt đúng số bạn đã chọn rồi mới hiện tên/biểu tượng kết quả.
+- [ ] B8. Viết kiểm tra tự động: giới hạn số lượng, không trùng, kết quả chỉ lộ sau đếm ngược.
+- [ ] B9. Kiểm tra thật trên Pages: ba góc nhìn; 3/6/20 giây; bắt 1/nhiều bạn.
 
 ## Giai đoạn C — Skin
 - [ ] C1. Tạo 3 skin gốc có sẵn.

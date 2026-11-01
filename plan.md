@@ -77,14 +77,40 @@ ufo-tram-goi-bai/
 
 **Xong khi:** mở link Pages thấy mô hình 3D thật trên canvas, kéo camera được; học sinh chạy, UFO bay, và gọi một em kích hoạt đầy đủ cảnh quét–bay tới–tia hút. Không có lỗi JavaScript, dùng được trên kích thước 1280×633 và 1366×768.
 
-### Giai đoạn B — Vòng chơi gọi bài
-1. Chốt mô hình dữ liệu: học sinh, câu hỏi, lượt chơi, kết quả, skin.
-2. Nhập nhanh danh sách học sinh và bộ câu hỏi dạng bảng trong phần Cài đặt.
-3. Nút gọi ngẫu nhiên: không gọi trùng cho đến khi hết danh sách (có nút làm lại vòng).
-4. Giáo viên bấm Đúng/Sai/Bỏ qua; bảng trạng thái và tổng kết cập nhật ngay.
-5. Viết kiểm tra tự động cho chọn ngẫu nhiên, chống trùng và làm lại vòng.
+### Giai đoạn B — Vòng dò tìm, góc nhìn và bắt lên tàu
 
-**Xong khi:** 10 học sinh được gọi đủ 10 em, không trùng trước khi hết vòng; điểm/kết quả khớp thao tác.
+#### B1. Ba góc nhìn 3D
+1. Thêm cụm nút góc nhìn bên dưới sân khấu; nút đang dùng có trạng thái nổi bật rõ ràng.
+2. **Toàn cảnh:** giữ đúng góc nhìn hiện có — quan sát toàn bộ khu phố, UFO và tất cả học sinh.
+3. **Theo dấu UFO:** camera bám mềm phía sau/chếch trên UFO; khi UFO bay đổi mục tiêu, camera di chuyển theo nhưng không rung giật.
+4. **Góc phố:** camera hạ xuống gần mặt đường, nhìn cận cảnh các nhân vật đang chạy và UFO ở phía trên; không để camera xuyên qua nhà/cây.
+5. Chuyển góc nhìn bằng nội suy mượt, không cắt cảnh đột ngột; khi không dò tìm, người chơi vẫn có thể kéo/xoay và zoom ở chế độ Toàn cảnh.
+
+#### B2. Điều khiển số lượng và luật chọn học sinh
+1. Thêm ô số **Số bạn lên tàu** với nút `−` và `+`; tối thiểu 1, tối đa bằng số bạn còn sẵn sàng.
+2. Hiển thị rõ dạng `ĐÃ LÊN TÀU 0 / N` để giáo viên biết đang bắt bao nhiêu bạn trong lượt.
+3. Thêm công tắc **Không gọi trùng**:
+   - Bật (mặc định): học sinh đã lên tàu sẽ không được chọn lại; khi tất cả đã được chọn, hiện nút làm vòng mới.
+   - Tắt: vẫn cho phép chọn lại tên ở các lượt sau.
+4. Khi giáo viên đổi số lượng hoặc bật/tắt không trùng, không làm mất kết quả đã có của lượt hiện tại.
+
+#### B3. Thời gian dò và kịch tính trước khi bắt
+1. Thêm điều khiển **Thời gian dò** theo giây (mặc định 6 giây; giới hạn hợp lý 3–20 giây) cùng đồng hồ đếm ngược lớn.
+2. Khi bấm `🚀 Bắt đầu dò tìm`, hệ thống chọn sẵn kết quả ngẫu nhiên trong bộ nhớ nhưng **không hé lộ tên** cho đến giây cuối.
+3. Trong toàn bộ thời gian dò:
+   - UFO tăng tốc bay qua nhiều học sinh còn hợp lệ.
+   - Tên mỗi bạn được UFO chiếu qua sẽ phát sáng/đánh dấu ngắn rồi tắt.
+   - Mục tiêu thay đổi liên tục; camera Theo dấu UFO phản ánh đường bay đó.
+   - Âm thanh/đèn/tia quét tăng nhịp dần theo thời gian còn lại.
+4. Chỉ khi đồng hồ về 0: khóa mục tiêu cuối, UFO bay đến vị trí đó, bật tia hút, kéo đúng N nhân vật lên tàu; sau đó mới hiện tên và ảnh/biểu tượng của từng bạn được chọn.
+5. Với N > 1, hút lần lượt từng bạn theo cùng một cảnh thay vì làm biến mất đồng thời.
+
+#### B4. Kết quả và kiểm tra
+1. Khu vực kết quả hiện ảnh/biểu tượng phi hành gia, tên, số thứ tự lên tàu và thời điểm của từng bạn.
+2. Viết kiểm tra tự động cho: giới hạn `−/+`, chống gọi trùng, chọn đủ N người, chỉ công bố kết quả sau hết giờ, và làm vòng mới.
+3. Kiểm tra thật trên Pages ở ba góc nhìn, với thời gian dò 3/6/20 giây và số bắt 1/nhiều bạn.
+
+**Xong khi:** giáo viên chọn được góc nhìn, thời gian dò và số bạn lên tàu; UFO đổi mục tiêu trong lúc dò; tên chỉ lộ khi hết giờ; không gọi trùng theo chế độ đã chọn; cảnh hút và kết quả đúng với số lượng yêu cầu.
 
 ### Giai đoạn C — Skin và tùy chỉnh hình ảnh
 1. Skin mặc định theo cấu trúc có tên, màu, ảnh minh họa, hiệu ứng.
