@@ -26,9 +26,9 @@
 - Khi đến phần nhiều ảnh skin: dùng IndexedDB + sao lưu JSON, không lưu ảnh lớn trong localStorage.
 
 ## Bước tiếp theo
-1. Đẩy bản khung đầu tiên lên GitHub và bật GitHub Pages.
-2. Kiểm tra link Pages thật.
-3. Sang Giai đoạn B: thêm câu hỏi, Đúng/Sai/Bỏ qua và bảng kết quả.
+1. Sang Giai đoạn B: thêm câu hỏi, Đúng/Sai/Bỏ qua và bảng kết quả.
+2. Chốt luật điểm bản đầu (đề xuất: Đúng +1, Sai/Bỏ qua 0).
+3. Sau khi vòng chơi chữ ổn định, tiếp tục ảnh skin cá nhân và sao lưu/khôi phục.
 
 ## Lưu ý vận hành
 - Mỗi lần GitHub Pages cập nhật, anh mở link rồi bấm `Ctrl + Shift + R` để tải bản mới.

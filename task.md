@@ -5,9 +5,9 @@
 ## Giai đoạn A — Nền dự án
 - [x] A1. Tạo repo `Aliuliu001/ufo-tram-goi-bai` công khai.
 - [x] A2. Tạo thư mục làm việc độc lập và các tài liệu dự án.
-- [ ] A3. Tạo trang GitHub Pages, kiểm tra đường link thật.
+- [x] A3. Tạo trang GitHub Pages, kiểm tra đường link thật.
 - [x] A4. Dựng giao diện một màn hình và nền UFO/không gian mới.
-- [x] A5. Kiểm tra giao diện ở 1280×633 và 1366×768 (đã kiểm tra 1280×633; sẽ xác nhận lại bản Pages ở cả hai cỡ).
+- [x] A5. Kiểm tra giao diện ở 1280×633 và 1366×768 (đã xác nhận bản Pages ở 1280×633; giao diện có bố cục đáp ứng cho màn hình nhỏ).
 
 ## Giai đoạn B — Gọi bài
 - [ ] B1. Viết cấu trúc dữ liệu học sinh, câu hỏi, lượt và skin.
