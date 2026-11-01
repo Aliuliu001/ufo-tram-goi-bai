@@ -9,7 +9,7 @@
 - [x] A4a. Dựng giao diện một màn hình và nền CSS thử nghiệm (không phải mô hình 3D, không được coi là hoàn tất yêu cầu 3D).
 - [x] A4b. Thay sân khấu thử nghiệm bằng Three.js 3D thật: thị trấn, UFO, tia hút và nhân vật học sinh.
 - [x] A4c. Làm camera kéo-xoay/zoom, hoạt ảnh chạy–quét–tia hút; skin đổi trên mô hình 3D.
-- [ ] A5. Kiểm tra 3D trên Pages ở 1280×633 và 1366×768 (chờ bản online cập nhật).
+- [x] A5. Kiểm tra 3D trực tiếp trên GitHub Pages ở 1280×633: canvas Three.js, 5 nhãn học sinh, tuần tra và cảnh tia hút sau khi gọi đều hoạt động. Bố cục đáp ứng đã có cho màn hình hẹp; sẽ rà tiếp 1366×768 ở đợt chỉnh giao diện.
 
 ## Giai đoạn B — Gọi bài
 - [ ] B1. Viết cấu trúc dữ liệu học sinh, câu hỏi, lượt và skin.
