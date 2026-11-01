@@ -112,14 +112,58 @@ ufo-tram-goi-bai/
 
 **Xong khi:** giáo viên chọn được góc nhìn, thời gian dò và số bạn lên tàu; UFO đổi mục tiêu trong lúc dò; tên chỉ lộ khi hết giờ; không gọi trùng theo chế độ đã chọn; cảnh hút và kết quả đúng với số lượng yêu cầu.
 
-### Giai đoạn C — Skin và tùy chỉnh hình ảnh
-1. Skin mặc định theo cấu trúc có tên, màu, ảnh minh họa, hiệu ứng.
-2. Màn chọn skin rõ ràng trước khi bắt đầu.
-3. Mỗi skin đổi được nhân vật/phi thuyền/màu hiệu ứng mà không làm đổi luật chơi.
-4. Chuẩn bị phần tải ảnh skin cá nhân: nén ảnh, kho IndexedDB, danh sách ảnh, xóa, sao lưu/khôi phục.
-5. Kiểm tra khi tải 20+ ảnh: tải lại trang vẫn đủ ảnh; ảnh PNG trong suốt không mất nền.
+### Giai đoạn C — Quản lý lớp, học sinh, ảnh và skin
 
-**Xong khi:** ít nhất 3 skin có sẵn hoạt động đúng và việc đổi skin không làm mất dữ liệu lớp/câu hỏi.
+#### C1. Chia phần thao tác nhanh và phần Quản lý
+
+**Đặt ngoài màn chơi** — vì giáo viên cần thao tác liên tục trong một tiết:
+1. **Danh sách lớp**: cột/thanh gọn, bấm một lần để đổi lớp đang chơi.
+2. **Danh sách phi hành đoàn của lớp đang chọn**: hiện tên + ảnh nhỏ; bấm tên để tạm cho bạn đó nghỉ/tham gia lại; có nút `✓ Bật tất cả`.
+3. Điều khiển vòng dò: số bạn lên tàu, chống gọi trùng, thời gian dò, nút bắt đầu, ba góc camera.
+4. HUD: số đã lên tàu, đồng hồ, nhật ký kết quả mới nhất và nút `↻ Bắt đầu vòng mới`.
+5. Nút nhanh trên đầu: bật/tắt **Nhạc nền**, bật/tắt **Hiệu ứng**, **Hướng dẫn**, **Toàn màn hình**, và `⚙️ Quản lý`.
+
+**Đặt trong `⚙️ Quản lý`** — vì chỉ dùng khi chuẩn bị/đổi dữ liệu, không nên làm rối lúc chơi:
+1. Tab `📚 Lớp học`: thêm, đổi tên, sắp xếp, xóa lớp (xóa phải hỏi lại).
+2. Tab `🧑‍🚀 Học sinh`: bảng một dòng/một học sinh gồm ảnh, tên, trạng thái; thêm/sửa/xóa nhiều bạn ngay trong bảng, không dùng popup từng em.
+3. Tab `🖼️ Ảnh học sinh`: tải nhiều ảnh, kéo-thả, xem thumbnail, gán ảnh vào từng học sinh; tên/ảnh chưa gán có cảnh báo rõ.
+4. Tab `🎨 Skin`: chọn skin đang dùng, xem trước UFO + nhân vật + tia hút, quản lý skin do anh tải lên.
+5. Tab `💾 Dữ liệu`: sao lưu/khôi phục JSON, làm sạch dữ liệu có xác nhận.
+
+#### C2. Mô hình ảnh học sinh
+1. Mỗi học sinh có cấu trúc `id`, `tên`, `ảnh đại diện tùy chọn`, `trạng thái tham gia`; tên là dữ liệu bắt buộc, ảnh là tùy chọn.
+2. Nếu chưa có ảnh: hiện avatar phi hành gia mặc định theo skin, không hiện ô lỗi/mất mặt.
+3. Ảnh đại diện dùng ở ba nơi: danh sách phi hành đoàn, nhãn/kết quả bắt lên tàu, và thẻ chúc mừng cuối cảnh hút.
+4. Ảnh được nén khi tải lên, lưu trong IndexedDB; bảng lớp chỉ lưu mã tham chiếu ảnh để không chậm/đầy bộ nhớ.
+5. Sao lưu JSON phải gói cả lớp, học sinh, trạng thái, cài đặt, skin và ảnh; khôi phục kiểm tra đúng file trước khi thay dữ liệu hiện có.
+
+#### C3. Hệ skin có thể mở rộng
+1. Tách **skin UFO** và **skin nhân vật dưới phố** để giáo viên có thể ghép tự do, ví dụ UFO mặc định + Pokémon/động vật.
+2. Mỗi skin gồm: tên, ảnh xem trước, màu đèn, màu tia hút, mô hình UFO/nhân vật hoặc tập ảnh sprite/ảnh cắt nền.
+3. Bản có sẵn dùng hình/mô hình tự dựng hoặc có giấy phép rõ ràng:
+   - `🛸 Phi hành gia` — UFO và người phi hành gia mặc định.
+   - `🐾 Biệt đội động vật` — thú dễ thương/hoạt hình.
+   - `🌿 Khu rừng tí hon` — sinh vật rừng dễ thương.
+4. **Pokémon:** không đưa sẵn hình/mô hình Pokémon có bản quyền vào repo công khai. Nếu anh có ảnh được phép dùng, phần `Skin của tôi` cho phép anh tự tải lên để sử dụng nội bộ; game cũng sẽ hỗ trợ các skin “quái thú/linh thú” tự thiết kế, không sao chép nhân vật thương hiệu.
+5. Skin tùy chỉnh phải có màn chọn ảnh UFO, ảnh/mô hình nhân vật và ảnh kết quả; asset lớn lưu IndexedDB, không lưu base64 lớn trong localStorage.
+6. Đổi skin không được làm mất lớp, danh sách học sinh, vòng đang chạy hoặc lịch sử kết quả.
+
+#### C4. Rà lại game tham khảo và tối ưu bổ sung
+Đã kiểm tra lại source công khai của game tham khảo. Các phần cần mang sang/hoàn thiện theo bản riêng:
+1. Danh sách lớp bên ngoài + quản lý lớp trong popup.
+2. Danh sách phi hành đoàn bấm để tạm nghỉ/tham gia lại, kèm `Bật tất cả`.
+3. Nhật ký chuyến bay/kết quả theo thứ tự, nút dò lượt tiếp và bắt đầu vòng mới.
+4. Bật/tắt nhạc nền và hiệu ứng riêng; nút hướng dẫn; toàn màn hình.
+5. Thẻ công bố người được chọn sau khi hút — có ảnh đại diện, tên, thứ tự, nút đóng/dò lượt tiếp.
+6. Tối ưu hiệu năng: giới hạn số ảnh/mô hình hiển thị cùng lúc, tắt bóng/hiệu ứng nặng khi máy yếu; không để skin tải lên làm chậm cảnh 3D.
+
+#### C5. Kiểm tra
+1. Thử 4 lớp × 20 học sinh, đổi lớp không mất dữ liệu và không lẫn kết quả giữa lớp.
+2. Tải 20+ ảnh; tải lại trang vẫn đủ ảnh; ảnh PNG trong suốt không mất nền.
+3. Sao lưu → xóa cả localStorage/IndexedDB → khôi phục → tải lại: lớp, ảnh, skin, cài đặt và lịch sử trở về đúng.
+4. Đổi UFO/nhân vật trước và trong lúc chờ không phá camera, cảnh dò hay tia hút.
+
+**Xong khi:** giáo viên thao tác nhanh được lớp và phi hành đoàn ngay ngoài màn chơi; quản trị/ảnh/skin nằm gọn trong một nơi; ảnh và skin không mất khi tải lại; có ít nhất 3 skin gốc hoạt động, và mọi dữ liệu được sao lưu/khôi phục đầy đủ.
 
 ### Giai đoạn D — Trải nghiệm lớp học và dữ liệu an toàn
 1. Công tắc riêng cho âm thanh hiệu ứng và nhạc nền.

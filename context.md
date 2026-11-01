@@ -34,10 +34,22 @@
 - Thời gian dò là lúc UFO đổi nhiều mục tiêu, rọi sáng tên từng bạn để tạo kịch tính. Kết quả ngẫu nhiên phải giữ kín cho đến hết đếm ngược.
 - Hết giờ mới khóa mục tiêu, hút lần lượt đúng số bạn đã chọn; sau đó mới hiện tên và ảnh/biểu tượng của các bạn được chọn.
 
+## Phân bố giao diện đã chốt
+- **Ngoài màn chơi:** Danh sách lớp, Danh sách phi hành đoàn + ảnh nhỏ và bật/tắt tham gia, số bạn lên tàu, chống trùng, thời gian dò, bắt đầu dò, camera, HUD/nhật ký ngắn, nhạc/SFX/hướng dẫn/toàn màn hình.
+- **Trong `⚙️ Quản lý`:** thêm/sửa/xóa lớp, bảng học sinh một dòng/một bạn, kho ảnh & gán ảnh, skin có sẵn/Skin của tôi, sao lưu/khôi phục/làm sạch.
+- Ảnh học sinh là tùy chọn. Không có ảnh thì dùng avatar tương ứng skin.
+- Skin UFO và nhân vật là hai lựa chọn tách biệt để ghép tự do.
+- Không phát hành ảnh/mô hình Pokémon có bản quyền trong repo. Chỉ hỗ trợ anh tự tải asset đã được phép vào Skin của tôi hoặc dùng skin linh thú tự thiết kế.
+
+## Rà lại game tham khảo
+- Đã ghi nhận đầy đủ: danh sách lớp, quản lý lớp, phi hành đoàn bật/tắt nhanh, bộ đếm số chọn, không trùng, thời gian dò, camera, nhật ký chuyến bay, popup người thắng, BGM/SFX riêng, hướng dẫn và toàn màn hình.
+- Cần tối ưu thêm cho bản của anh: ảnh học sinh, skin tách UFO/nhân vật, IndexedDB và backup/restore — những phần bản tham khảo chưa có đầy đủ.
+
 ## Bước tiếp theo
 1. Làm B1–B2: ba góc nhìn và chuyển camera mượt.
 2. Làm B3–B5: số bạn lên tàu, chống trùng và thời gian dò.
 3. Làm B6–B9: cảnh đổi mục tiêu, hút sau khi hết giờ, kiểm tra tự động và Pages.
+4. Sang C1–C10: quản lý lớp/học sinh/ảnh và skin sau khi vòng dò ổn định.
 
 ## Lưu ý vận hành
 - Mỗi lần GitHub Pages cập nhật, anh mở link rồi bấm `Ctrl + Shift + R` để tải bản mới.

@@ -22,12 +22,17 @@
 - [ ] B8. Viết kiểm tra tự động: giới hạn số lượng, không trùng, kết quả chỉ lộ sau đếm ngược.
 - [ ] B9. Kiểm tra thật trên Pages: ba góc nhìn; 3/6/20 giây; bắt 1/nhiều bạn.
 
-## Giai đoạn C — Skin
-- [ ] C1. Tạo 3 skin gốc có sẵn.
-- [ ] C2. Làm màn hình chọn skin trước khi chơi.
-- [ ] C3. Gắn skin với nhân vật, màu và hiệu ứng riêng.
-- [ ] C4. Làm kho tải ảnh skin cá nhân bằng IndexedDB.
-- [ ] C5. Kiểm tra tải 20+ ảnh, tải lại trang vẫn còn ảnh.
+## Giai đoạn C — Quản lý lớp, học sinh, ảnh và skin
+- [ ] C1. Đặt Danh sách lớp + Phi hành đoàn ngoài màn chơi; bấm tên để tạm nghỉ/tham gia, có Bật tất cả.
+- [ ] C2. Tạo `⚙️ Quản lý` gồm tab Lớp học / Học sinh / Ảnh học sinh / Skin / Dữ liệu.
+- [ ] C3. Làm bảng một dòng/một học sinh: ảnh, tên, trạng thái; thêm/sửa/xóa nhiều bạn không dùng popup từng em.
+- [ ] C4. Làm kho ảnh học sinh IndexedDB: upload nhiều/kéo-thả/gán ảnh/cảnh báo thiếu ảnh.
+- [ ] C5. Hiện ảnh/biểu tượng học sinh ở danh sách, kết quả và thẻ chúc mừng; không ảnh thì dùng avatar skin mặc định.
+- [ ] C6. Tách skin UFO với skin nhân vật; có 3 skin gốc: Phi hành gia / Biệt đội động vật / Khu rừng tí hon.
+- [ ] C7. Làm Skin của tôi: tải asset được phép dùng, chọn UFO/nhân vật/ảnh kết quả; không nhúng Pokémon có bản quyền vào repo công khai.
+- [ ] C8. Thêm Nhật ký chuyến bay, Nhạc nền/SFX riêng, Hướng dẫn và Toàn màn hình theo bản tham khảo.
+- [ ] C9. Làm sao lưu/khôi phục gồm lớp, học sinh, ảnh, skin, cài đặt và lịch sử.
+- [ ] C10. Kiểm tra: 4 lớp × 20 học sinh; 20+ ảnh; backup → xóa → restore → tải lại.
 
 ## Giai đoạn D — Dữ liệu và trải nghiệm lớp học
 - [ ] D1. Thêm công tắc âm thanh hiệu ứng và nhạc nền riêng.
