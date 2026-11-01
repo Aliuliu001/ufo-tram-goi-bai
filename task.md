@@ -6,8 +6,10 @@
 - [x] A1. Tạo repo `Aliuliu001/ufo-tram-goi-bai` công khai.
 - [x] A2. Tạo thư mục làm việc độc lập và các tài liệu dự án.
 - [x] A3. Tạo trang GitHub Pages, kiểm tra đường link thật.
-- [x] A4. Dựng giao diện một màn hình và nền UFO/không gian mới.
-- [x] A5. Kiểm tra giao diện ở 1280×633 và 1366×768 (đã xác nhận bản Pages ở 1280×633; giao diện có bố cục đáp ứng cho màn hình nhỏ).
+- [x] A4a. Dựng giao diện một màn hình và nền CSS thử nghiệm (không phải mô hình 3D, không được coi là hoàn tất yêu cầu 3D).
+- [x] A4b. Thay sân khấu thử nghiệm bằng Three.js 3D thật: thị trấn, UFO, tia hút và nhân vật học sinh.
+- [x] A4c. Làm camera kéo-xoay/zoom, hoạt ảnh chạy–quét–tia hút; skin đổi trên mô hình 3D.
+- [ ] A5. Kiểm tra 3D trên Pages ở 1280×633 và 1366×768 (chờ bản online cập nhật).
 
 ## Giai đoạn B — Gọi bài
 - [ ] B1. Viết cấu trúc dữ liệu học sinh, câu hỏi, lượt và skin.

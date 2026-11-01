@@ -1,4 +1,5 @@
 import { createRound, pickNextStudent } from './game-engine.js';
+import { createWorld3D } from './scene3d.js';
 
 const DEFAULT_STUDENTS = ['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy'];
 const SKINS = [
@@ -23,6 +24,7 @@ let students = loadStudents();
 let round = createRound(students);
 let selectedSkin = SKINS[0];
 let soundOn = true;
+let world3D = null;
 
 function loadStudents() {
   try {
@@ -51,15 +53,16 @@ function callStudent() {
   const result = pickNextStudent(round); round = result.round;
   if (!result.student) return render();
   elements.name.textContent = result.student;
-  elements.status.textContent = round.isComplete ? 'Bạn là tín hiệu cuối cùng — hoàn thành nhiệm vụ!' : 'Đã nhận tín hiệu. Mời bạn lên trạm UFO!';
+  elements.status.textContent = 'UFO đang quét mục tiêu, bay đến và bật tia hút…';
   document.querySelector('#student-card').classList.remove('arrive'); requestAnimationFrame(() => document.querySelector('#student-card').classList.add('arrive'));
+  world3D?.abduct(result.student);
   playSignal(); render();
 }
-function resetRound() { round = createRound(students); elements.name.textContent = 'Bấm để gọi học sinh'; elements.status.textContent = 'UFO sẽ chọn ngẫu nhiên, không gọi trùng trong lượt.'; render(); }
+function resetRound() { round = createRound(students); world3D?.setStudents(students); elements.name.textContent = 'Bấm để gọi học sinh'; elements.status.textContent = 'UFO sẽ chọn ngẫu nhiên, không gọi trùng trong lượt.'; render(); }
 function renderSkins() {
   elements.skinGrid.innerHTML = SKINS.map((skin) => `<button class="skin-option ${skin.id === selectedSkin.id ? 'selected' : ''}" type="button" data-skin="${skin.id}" style="--skin-a:${skin.accent};--skin-b:${skin.accent2}"><span class="skin-preview">🛸</span><strong>${skin.name}</strong><small>${skin.id === selectedSkin.id ? 'Đang dùng' : 'Chọn skin'}</small></button>`).join('');
 }
-function selectSkin(id) { selectedSkin = SKINS.find((skin) => skin.id === id) || SKINS[0]; document.documentElement.style.setProperty('--accent', selectedSkin.accent); document.documentElement.style.setProperty('--accent-2', selectedSkin.accent2); elements.skinName.textContent = selectedSkin.name; renderSkins(); }
+function selectSkin(id) { selectedSkin = SKINS.find((skin) => skin.id === id) || SKINS[0]; document.documentElement.style.setProperty('--accent', selectedSkin.accent); document.documentElement.style.setProperty('--accent-2', selectedSkin.accent2); elements.skinName.textContent = selectedSkin.name; world3D?.setSkin(selectedSkin); renderSkins(); }
 
 elements.call.addEventListener('click', callStudent); elements.reset.addEventListener('click', resetRound);
 elements.settingsOpen.addEventListener('click', () => { elements.input.value = students.join('\n'); elements.settings.showModal(); });
@@ -68,3 +71,6 @@ elements.skinOpen.addEventListener('click', () => { renderSkins(); elements.skin
 elements.skinGrid.addEventListener('click', (event) => { const button = event.target.closest('[data-skin]'); if (!button) return; selectSkin(button.dataset.skin); elements.skinDialog.close(); });
 elements.sound.addEventListener('click', () => { soundOn = !soundOn; elements.sound.textContent = soundOn ? '🔊' : '🔇'; });
 selectSkin(selectedSkin.id); render();
+createWorld3D(document.querySelector('#world3d'), document.querySelector('#world-labels'))
+  .then((world) => { world3D = world; world3D.setStudents(students); world3D.setSkin(selectedSkin); elements.name.textContent = 'Bấm để gọi học sinh'; elements.status.textContent = 'UFO đang tuần tra. Kéo khung 3D để xoay góc nhìn.'; })
+  .catch(() => { elements.name.textContent = 'Không mở được thế giới 3D'; elements.status.textContent = 'Kiểm tra lại kết nối mạng rồi tải lại trang.'; });

@@ -69,9 +69,13 @@ ufo-tram-goi-bai/
 1. Tạo repo công khai, thư mục làm việc riêng, tài liệu `README.md`, `plan.md`, `task.md`, `context.md`.
 2. Tạo GitHub Pages và kiểm tra có link chơi được.
 3. Dựng khung một màn hình: tiêu đề, khu vực sân khấu UFO, bảng lớp, điều khiển.
-4. Làm nền không gian/UFO 3D nhẹ có phương án dự phòng nếu hiệu ứng 3D không tải được.
+4. **Làm sân khấu Three.js 3D thật**, lấy cảm hứng từ game được cấp phép: thị trấn/đường phố, nhà/cây/đèn, bầu trời sao và hành tinh; không dùng nền CSS để giả 3D.
+5. Dựng UFO từ các khối 3D (thân đĩa, mái kính, phi công ngoài hành tinh, đèn viền, tia hút) và cho UFO bay tuần tra.
+6. Dựng từng học sinh thành nhân vật phi hành gia 3D nhỏ, có nhãn tên nổi và hoạt ảnh chạy quanh khu phố.
+7. Thêm camera góc nhìn nghiêng: tự quay chậm khi chờ, có thể kéo để xoay và lăn chuột để phóng to/thu nhỏ.
+8. Khi gọi: chuyển sang quét 5–6 giây, UFO bay theo mục tiêu rồi tia hút kéo nhân vật được gọi lên tàu. Skin phải đổi thật màu tàu/đèn/beam trong mô hình 3D.
 
-**Xong khi:** mở link Pages thấy giao diện mới, không có lỗi JavaScript, dùng được trên kích thước 1280×633 và 1366×768.
+**Xong khi:** mở link Pages thấy mô hình 3D thật trên canvas, kéo camera được; học sinh chạy, UFO bay, và gọi một em kích hoạt đầy đủ cảnh quét–bay tới–tia hút. Không có lỗi JavaScript, dùng được trên kích thước 1280×633 và 1366×768.
 
 ### Giai đoạn B — Vòng chơi gọi bài
 1. Chốt mô hình dữ liệu: học sinh, câu hỏi, lượt chơi, kết quả, skin.
