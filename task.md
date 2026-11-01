@@ -28,11 +28,12 @@
 - [ ] C3. Làm bảng một dòng/một học sinh: ảnh, tên, trạng thái; thêm/sửa/xóa nhiều bạn không dùng popup từng em.
 - [ ] C4. Làm kho ảnh học sinh IndexedDB: upload nhiều/kéo-thả/gán ảnh/cảnh báo thiếu ảnh.
 - [ ] C5. Hiện ảnh/biểu tượng học sinh ở danh sách, kết quả và thẻ chúc mừng; không ảnh thì dùng avatar skin mặc định.
-- [ ] C6. Tách skin UFO với skin nhân vật; có 3 skin gốc: Phi hành gia / Biệt đội động vật / Khu rừng tí hon.
-- [ ] C7. Làm Skin của tôi: tải asset được phép dùng, chọn UFO/nhân vật/ảnh kết quả; không nhúng Pokémon có bản quyền vào repo công khai.
-- [ ] C8. Thêm Nhật ký chuyến bay, Nhạc nền/SFX riêng, Hướng dẫn và Toàn màn hình theo bản tham khảo.
-- [ ] C9. Làm sao lưu/khôi phục gồm lớp, học sinh, ảnh, skin, cài đặt và lịch sử.
-- [ ] C10. Kiểm tra: 4 lớp × 20 học sinh; 20+ ảnh; backup → xóa → restore → tải lại.
+- [ ] C6. Tách skin UFO với skin nhân vật; có 4 skin: Phi hành gia / Biệt đội động vật / Khu rừng tí hon / Pokémon qua PokeAPI.
+- [ ] C7. Làm skin Pokémon: mỗi học sinh có sprite khác nhau từ PokeAPI, lỗi mạng thì về avatar phi hành gia.
+- [ ] C8. Làm Skin của tôi: tải asset được phép dùng, chọn UFO/nhân vật/ảnh kết quả.
+- [ ] C9. Thêm Nhật ký chuyến bay, Nhạc nền/SFX riêng, Hướng dẫn và Toàn màn hình theo bản tham khảo.
+- [ ] C10. Làm sao lưu/khôi phục gồm lớp, học sinh, ảnh, skin, cài đặt và lịch sử.
+- [ ] C11. Kiểm tra: 4 lớp × 20 học sinh; 20+ ảnh; backup → xóa → restore → tải lại.
 
 ## Giai đoạn D — Dữ liệu và trải nghiệm lớp học
 - [ ] D1. Thêm công tắc âm thanh hiệu ứng và nhạc nền riêng.

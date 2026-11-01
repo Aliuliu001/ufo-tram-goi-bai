@@ -39,7 +39,7 @@
 - **Trong `⚙️ Quản lý`:** thêm/sửa/xóa lớp, bảng học sinh một dòng/một bạn, kho ảnh & gán ảnh, skin có sẵn/Skin của tôi, sao lưu/khôi phục/làm sạch.
 - Ảnh học sinh là tùy chọn. Không có ảnh thì dùng avatar tương ứng skin.
 - Skin UFO và nhân vật là hai lựa chọn tách biệt để ghép tự do.
-- Không phát hành ảnh/mô hình Pokémon có bản quyền trong repo. Chỉ hỗ trợ anh tự tải asset đã được phép vào Skin của tôi hoặc dùng skin linh thú tự thiết kế.
+- Có skin Pokémon qua ảnh artwork/sprite được tải trực tiếp từ PokeAPI (không sao chép ảnh vào repo); khi không có mạng/lỗi tải ảnh, game tự dùng avatar phi hành gia. `Skin của tôi` vẫn dành cho asset được phép dùng.
 
 ## Rà lại game tham khảo
 - Đã ghi nhận đầy đủ: danh sách lớp, quản lý lớp, phi hành đoàn bật/tắt nhanh, bộ đếm số chọn, không trùng, thời gian dò, camera, nhật ký chuyến bay, popup người thắng, BGM/SFX riêng, hướng dẫn và toàn màn hình.

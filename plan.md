@@ -144,9 +144,11 @@ ufo-tram-goi-bai/
    - `🛸 Phi hành gia` — UFO và người phi hành gia mặc định.
    - `🐾 Biệt đội động vật` — thú dễ thương/hoạt hình.
    - `🌿 Khu rừng tí hon` — sinh vật rừng dễ thương.
-4. **Pokémon:** không đưa sẵn hình/mô hình Pokémon có bản quyền vào repo công khai. Nếu anh có ảnh được phép dùng, phần `Skin của tôi` cho phép anh tự tải lên để sử dụng nội bộ; game cũng sẽ hỗ trợ các skin “quái thú/linh thú” tự thiết kế, không sao chép nhân vật thương hiệu.
-5. Skin tùy chỉnh phải có màn chọn ảnh UFO, ảnh/mô hình nhân vật và ảnh kết quả; asset lớn lưu IndexedDB, không lưu base64 lớn trong localStorage.
-6. Đổi skin không được làm mất lớp, danh sách học sinh, vòng đang chạy hoặc lịch sử kết quả.
+   - `⚡ Pokémon` — dùng artwork/sprite từ PokeAPI qua đường link ngoài, không chép hay lưu ảnh thương hiệu vào repo.
+4. **Skin Pokémon:** game UFO gốc không có skin này; repo `pokemon-card-clash` của anh đang dùng PokeAPI official artwork (Pikachu/Charizard) qua URL. Bản UFO sẽ dùng cùng cơ chế: mỗi học sinh hiển thị một Pokémon khác nhau dạng sprite 3D/billboard có hoạt ảnh chạy; UFO đổi bảng màu đèn/tia hút. Cần mạng để tải artwork; nếu tải lỗi, tự trở về avatar phi hành gia mặc định.
+5. `Skin của tôi` cho phép anh tự tải asset đã được phép dùng vào nội bộ. Game cũng sẽ hỗ trợ các skin “quái thú/linh thú” tự thiết kế, không sao chép thương hiệu.
+6. Skin tùy chỉnh phải có màn chọn ảnh UFO, ảnh/mô hình nhân vật và ảnh kết quả; asset lớn lưu IndexedDB, không lưu base64 lớn trong localStorage.
+7. Đổi skin không được làm mất lớp, danh sách học sinh, vòng đang chạy hoặc lịch sử kết quả.
 
 #### C4. Rà lại game tham khảo và tối ưu bổ sung
 Đã kiểm tra lại source công khai của game tham khảo. Các phần cần mang sang/hoàn thiện theo bản riêng:
