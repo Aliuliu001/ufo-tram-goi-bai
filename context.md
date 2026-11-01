@@ -45,11 +45,17 @@
 - Đã ghi nhận đầy đủ: danh sách lớp, quản lý lớp, phi hành đoàn bật/tắt nhanh, bộ đếm số chọn, không trùng, thời gian dò, camera, nhật ký chuyến bay, popup người thắng, BGM/SFX riêng, hướng dẫn và toàn màn hình.
 - Cần tối ưu thêm cho bản của anh: ảnh học sinh, skin tách UFO/nhân vật, IndexedDB và backup/restore — những phần bản tham khảo chưa có đầy đủ.
 
+## Phase B đã hoàn thành
+- Có 3 camera: Toàn cảnh kéo-xoay/zoom, Theo dấu UFO và Góc phố.
+- Có `− / +` chọn số bạn lên tàu; mặc định không gọi trùng, có công tắc tắt khi cần.
+- Có thời gian dò nhanh 6/8/10 giây và phím Space để bắt đầu.
+- Trong lúc dò, UFO đổi mục tiêu/rọi nhãn tên nhưng không công bố kết quả.
+- Hết thời gian, UFO hút lần lượt; chỉ sau khi hút xong mới công bố tên kết quả.
+- Đã kiểm tra cục bộ và Pages; 8 kiểm tra tự động đều đạt.
+
 ## Bước tiếp theo
-1. Làm B1–B2: ba góc nhìn và chuyển camera mượt.
-2. Làm B3–B5: số bạn lên tàu, chống trùng và thời gian dò.
-3. Làm B6–B9: cảnh đổi mục tiêu, hút sau khi hết giờ, kiểm tra tự động và Pages.
-4. Sang C1–C10: quản lý lớp/học sinh/ảnh và skin sau khi vòng dò ổn định.
+1. Anh kiểm tra và duyệt Phase B trên link Pages.
+2. Sau khi anh duyệt, bắt đầu Phase C1–C11: lớp, học sinh, ảnh đại diện, skin và backup/restore.
 
 ## Lưu ý vận hành
 - Mỗi lần GitHub Pages cập nhật, anh mở link rồi bấm `Ctrl + Shift + R` để tải bản mới.

@@ -20,7 +20,7 @@
 - [x] B6. Làm cảnh dò: UFO đổi nhiều mục tiêu, tên được rọi sáng nhưng chưa lộ kết quả.
 - [x] B7. Khi về 0 giây, hút lần lượt đúng số bạn đã chọn rồi mới hiện tên/biểu tượng kết quả.
 - [x] B8. Viết và chạy kiểm tra tự động: giới hạn số lượng, không trùng, mục tiêu đổi khi dò, kết quả chỉ lộ sau đếm ngược.
-- [ ] B9. Kiểm tra thật trên Pages: ba góc nhìn; 6/8/10 giây; bắt 1/nhiều bạn (chờ bản online cập nhật).
+- [x] B9. Kiểm tra thật trên Pages: canvas 3D, 3 nút camera, 6/8/10 giây, bắt nhiều bạn cục bộ; trên Pages đã xác nhận Góc phố, dò 6 giây, giấu tên trong quá trình dò/hút rồi mới công bố và đánh dấu 1 bạn.
 
 ## Giai đoạn C — Quản lý lớp, học sinh, ảnh và skin
 - [ ] C1. Đặt Danh sách lớp + Phi hành đoàn ngoài màn chơi; bấm tên để tạm nghỉ/tham gia, có Bật tất cả.
