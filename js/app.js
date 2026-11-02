@@ -549,9 +549,42 @@ if (el.classSelector) {
   };
 }
 
+// Settings tabs
+if (el.classTab && el.studentTab) {
+  el.classTab.onclick = () => {
+    el.classTab.style.borderBottomColor = 'var(--accent)';
+    el.classTab.style.color = 'var(--text)';
+    el.studentTab.style.borderBottomColor = 'transparent';
+    el.studentTab.style.color = 'var(--muted)';
+    $('#class-management').style.display = 'block';
+    $('#student-list-editor').style.display = 'none';
+  };
+  
+  el.studentTab.onclick = () => {
+    el.studentTab.style.borderBottomColor = 'var(--accent)';
+    el.studentTab.style.color = 'var(--text)';
+    el.classTab.style.borderBottomColor = 'transparent';
+    el.classTab.style.color = 'var(--muted)';
+    $('#student-list-editor').style.display = 'block';
+    $('#class-management').style.display = 'none';
+    el.input.value = students.join('\n');
+  };
+}
+
 el.settingsOpen.onclick = () => {
   el.input.value = students.join('\n');
   renderClassManagement();
+  
+  // Reset to class tab
+  if (el.classTab) {
+    el.classTab.style.borderBottomColor = 'var(--accent)';
+    el.classTab.style.color = 'var(--text)';
+    el.studentTab.style.borderBottomColor = 'transparent';
+    el.studentTab.style.color = 'var(--muted)';
+    $('#class-management').style.display = 'block';
+    $('#student-list-editor').style.display = 'none';
+  }
+  
   el.settings.showModal();
 };
 

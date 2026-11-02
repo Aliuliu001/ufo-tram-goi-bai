@@ -13,9 +13,10 @@
     <header class="topbar panel">
       <div class="brand"><span class="brand-mark">🛸</span><div><p class="eyebrow">TRẠM GỌI BÀI</p><h1>UFO Classroom</h1></div></div>
       <div class="top-actions">
+        <select id="class-selector" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font-size:14px;font-weight:600;cursor:pointer"></select>
         <button class="icon-button" id="music-button" type="button" aria-label="Bật hoặc tắt nhạc nền">🎵</button>
         <button class="icon-button" id="sound-button" type="button" aria-label="Bật hoặc tắt hiệu ứng âm">🔊</button>
-        <button class="secondary-button" id="settings-button" type="button">⚙️ Chỉnh danh sách</button>
+        <button class="secondary-button" id="settings-button" type="button">⚙️ Cài đặt</button>
       </div>
     </header>
 
@@ -51,7 +52,30 @@
     <section class="queue panel"><div><p class="eyebrow">DANH SÁCH TÍN HIỆU</p><h2>Các bạn còn chờ</h2></div><div id="student-list" class="student-list"></div></section>
   </main>
 
-  <dialog id="settings-dialog" class="dialog"><form method="dialog" class="dialog-card"><div class="dialog-head"><div><p class="eyebrow">CÀI ĐẶT LỚP</p><h2>Danh sách học sinh</h2></div><button class="icon-button" aria-label="Đóng" value="cancel">×</button></div><p class="muted">Mỗi dòng một tên. Bản thử nghiệm đang dùng danh sách mẫu; sau này em sẽ thêm bảng câu hỏi và sao lưu đầy đủ.</p><textarea id="students-input" rows="9" aria-label="Danh sách học sinh"></textarea><div class="dialog-actions"><button class="secondary-button" value="cancel">Hủy</button><button class="primary-button" id="save-students-button" value="default">💾 Lưu danh sách</button></div></form></dialog>
+  <dialog id="settings-dialog" class="dialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head">
+        <div><p class="eyebrow">CÀI ĐẶT</p><h2>Quản lý lớp & học sinh</h2></div>
+        <button class="icon-button" aria-label="Đóng" value="cancel">×</button>
+      </div>
+      
+      <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid var(--line)">
+        <button type="button" id="class-tab" class="tab-button active" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid var(--accent);color:var(--text);font-weight:600;cursor:pointer">Quản lý lớp</button>
+        <button type="button" id="student-tab" class="tab-button" style="padding:8px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-weight:600;cursor:pointer">Danh sách học sinh</button>
+      </div>
+      
+      <div id="class-management" style="display:block"></div>
+      
+      <div id="student-list-editor" style="display:none">
+        <p class="muted">Mỗi dòng một tên. Danh sách này áp dụng cho lớp đang chọn.</p>
+        <textarea id="students-input" rows="9" aria-label="Danh sách học sinh" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);font-family:inherit;font-size:14px;resize:vertical"></textarea>
+        <div class="dialog-actions" style="margin-top:16px">
+          <button class="secondary-button" value="cancel">Hủy</button>
+          <button class="primary-button" id="save-students-button" type="button">💾 Lưu danh sách</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
   
   <dialog id="skin-dialog" class="dialog">
     <form method="dialog" class="dialog-card">
