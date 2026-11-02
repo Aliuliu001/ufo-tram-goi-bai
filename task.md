@@ -26,9 +26,9 @@
 - [x] N1. Chép template AI Studio vào repo, giữ bản v10 cũ trong `legacy-v10/` để tham chiếu an toàn.
 - [x] N2. Đổi cấu hình sang React + TypeScript + Vite và xuất bản build tĩnh cho GitHub Pages.
 - [x] N3. Kiểm tra type-check, production build và 29 bài kiểm tra cũ đều đạt; kiểm tra trực quan đã thấy map 3D, UFO, trường, hang, hồ, hàng rào và nhân vật.
-- [ ] N4. Xóa âm “u u u” kéo dài khi UFO đã hút xong và đang chờ trả lời.
-- [ ] N5. Đặt Dark làm mặc định; chỉnh Light thành ban ngày dịu, thấy rõ UFO và nhân vật.
-- [ ] N6. Khôi phục bộ chọn quét `3 / 6 / 8 / 10 giây`, đồng hồ, nhạc kịch tính, UFO blink/tia quét và mục tiêu bí mật đến hết giờ.
+- [x] N4. Xóa âm “u u u” kéo dài khi UFO đã hút xong và đang chờ trả lời. Đã kiểm tra qua đủ vòng 3 giây → quiz trên Pages v12.
+- [x] N5. Đặt Dark làm mặc định; chỉnh Light thành ban ngày dịu, thấy rõ UFO và nhân vật. Đã kiểm tra Dark mặc định và đổi theme cục bộ; bản Pages v12 đã phát hành.
+- [ ] N6. Khôi phục bộ chọn quét `3 / 6 / 8 / 10 giây`, đồng hồ, nhạc kịch tính, UFO blink/tia quét và mục tiêu bí mật đến hết giờ. (Đã xong timer/đồng hồ/mục tiêu bí mật; còn nhạc kịch tính + nâng cấp blink/tia quét.)
 - [ ] N7. Thêm các cảnh trốn hài hước: nhào lộn, đào đất, nhảy nước, leo cây, chui bụi, nhảy hàng rào và núp hang.
 - [ ] N8. Nạp quản lý lớp/học sinh bền vững cho nền mới.
 - [ ] N9. Nạp kho ảnh IndexedDB + sao lưu/khôi phục theo skill `game-image-upload`.
