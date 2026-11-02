@@ -62,6 +62,9 @@ class UfoWorld {
     this.slowMoFactor = 1.0;
     this.targetSlowMoFactor = 1.0;
     
+    // Sequence ID to cancel old callbacks
+    this.sequenceId = 0;
+    
     this.setupLights();
     this.buildTown();
     this.buildUfo();
@@ -223,6 +226,9 @@ class UfoWorld {
     hull.castShadow = true;
     this.ufo.add(hull);
     
+    // UFO type-specific geometry
+    this.buildUfoVariant(T);
+    
     this.rimMat = new T.MeshStandardMaterial({ color: this.skin.accent2, emissive: this.skin.accent2, emissiveIntensity: 1.1 });
     const rim = new T.Mesh(new T.TorusGeometry(3.67, .22, 12, 42), this.rimMat);
     rim.rotation.x = Math.PI / 2;
@@ -281,6 +287,66 @@ class UfoWorld {
     this.scene.add(this.ufo);
   }
 
+  buildUfoVariant(T) {
+    const type = this.ufoType || 'scout';
+    
+    if (type === 'rescue') {
+      // Rescue pods on sides
+      for (const side of [-1, 1]) {
+        const pod = new T.Mesh(
+          new T.SphereGeometry(.6, 12, 10),
+          new T.MeshStandardMaterial({ color: 0xff8f6a, metalness: .7, roughness: .3 })
+        );
+        pod.position.set(side * 4.2, -.3, 0);
+        this.ufo.add(pod);
+        
+        // Beacon light
+        const beacon = new T.Mesh(
+          new T.SphereGeometry(.15, 8, 8),
+          new T.MeshBasicMaterial({ color: 0xff4d4d })
+        );
+        beacon.position.set(side * 4.2, .2, 0);
+        this.ufo.add(beacon);
+      }
+    } else if (type === 'treasure') {
+      // Three energy rings
+      for (let i = 0; i < 3; i++) {
+        const ring = new T.Mesh(
+          new T.TorusGeometry(2.2 + i * .5, .12, 8, 24),
+          new T.MeshBasicMaterial({ 
+            color: [0xd2a8ff, 0x9b7aff, 0x7ba9ff][i], 
+            transparent: true, 
+            opacity: .7 
+          })
+        );
+        ring.rotation.x = Math.PI / 2 + i * .15;
+        ring.position.y = .8 + i * .3;
+        this.ufo.add(ring);
+      }
+    } else if (type === 'storm') {
+      // Two fins
+      for (const side of [-1, 1]) {
+        const finGeo = new T.BoxGeometry(.3, 2.5, 1.2);
+        const fin = new T.Mesh(
+          finGeo,
+          new T.MeshStandardMaterial({ color: 0x4a4a6a, metalness: .85, roughness: .15 })
+        );
+        fin.position.set(side * 3.8, .5, 0);
+        fin.rotation.z = side * .25;
+        fin.castShadow = true;
+        this.ufo.add(fin);
+      }
+      
+      // Glowing core
+      const core = new T.Mesh(
+        new T.SphereGeometry(.45, 16, 16),
+        new T.MeshBasicMaterial({ color: 0xffcf58 })
+      );
+      core.position.y = -.5;
+      this.ufo.add(core);
+    }
+  }
+
   setStudents(names) {
     this.students.forEach(a => {
       this.scene.remove(a.group);
@@ -294,37 +360,16 @@ class UfoWorld {
       const color = [0x55c8fa, 0xa2e75e, 0xff8fb7, 0xffd35e, 0xa98bff][i % 5];
       const mat = new T.MeshStandardMaterial({ color, roughness: .45 });
       
-      const body = new T.Mesh(new T.CylinderGeometry(.4, .48, 1.1, 12), mat);
-      body.position.y = 1.08;
-      body.castShadow = true;
-      g.add(body);
-      
-      const head = new T.Mesh(new T.SphereGeometry(.49, 14, 12), new T.MeshStandardMaterial({ color: 0xf5fbff, roughness: .2 }));
-      head.position.y = 1.96;
-      g.add(head);
-      
-      const visor = new T.Mesh(new T.SphereGeometry(.34, 12, 10), new T.MeshStandardMaterial({ color: 0x208ec7, emissive: 0x34d9f7, emissiveIntensity: .35, metalness: .8 }));
-      visor.position.set(0, 1.98, .27);
-      g.add(visor);
-      
-      if (this.characterSkin === 'animals') {
-        const fur = [0xffc857, 0xf49ac2, 0xb990ff, 0x83dfb0, 0xff9a65][i % 5];
-        const animalMat = new T.MeshStandardMaterial({ color: fur, roughness: .55 });
-        g.scale.setScalar(1.28);
-        
-        for (const x of [-.38, .38]) {
-          const ear = new T.Mesh(new T.ConeGeometry(.27, .78, 8), animalMat);
-          ear.position.set(x, 2.72, 0);
-          g.add(ear);
-        }
-        
-        const muzzle = new T.Mesh(new T.SphereGeometry(.27, 10, 8), animalMat);
-        muzzle.position.set(0, 1.93, .46);
-        g.add(muzzle);
-        
-        const tail = new T.Mesh(new T.SphereGeometry(.31, 10, 8), animalMat);
-        tail.position.set(0, .95, -.62);
-        g.add(tail);
+      // Crew skin rendering
+      if (this.characterSkin === 'forest') {
+        this.buildForestCrew(g, T, i);
+      } else if (this.characterSkin === 'robots') {
+        this.buildRobotCrew(g, T, i);
+      } else if (this.characterSkin === 'animals') {
+        this.buildAnimalCrew(g, T, mat, i);
+      } else {
+        // Default astronaut
+        this.buildAstronautCrew(g, T, mat);
       }
       
       const limbs = [];
@@ -368,6 +413,7 @@ class UfoWorld {
 
   setSkin(skin) {
     this.skin = { accent: parseInt(skin.accent.replace('#', ''), 16), accent2: parseInt(skin.accent2.replace('#', ''), 16) };
+    this.ufoType = skin.type || 'scout';
     this.rimMat.color.setHex(this.skin.accent2);
     this.rimMat.emissive.setHex(this.skin.accent2);
     this.beamMat.color.setHex(this.skin.accent);
@@ -378,6 +424,142 @@ class UfoWorld {
     this.characterSkin = kind;
     const names = this.students.map(a => a.name);
     this.setStudents(names);
+  }
+
+  buildAstronautCrew(group, T, mat) {
+    const body = new T.Mesh(new T.CylinderGeometry(.4, .48, 1.1, 12), mat);
+    body.position.y = 1.08;
+    body.castShadow = true;
+    group.add(body);
+    
+    const head = new T.Mesh(new T.SphereGeometry(.49, 14, 12), new T.MeshStandardMaterial({ color: 0xf5fbff, roughness: .2 }));
+    head.position.y = 1.96;
+    group.add(head);
+    
+    const visor = new T.Mesh(new T.SphereGeometry(.34, 12, 10), new T.MeshStandardMaterial({ color: 0x208ec7, emissive: 0x34d9f7, emissiveIntensity: .35, metalness: .8 }));
+    visor.position.set(0, 1.98, .27);
+    group.add(visor);
+  }
+
+  buildAnimalCrew(group, T, mat, index) {
+    const body = new T.Mesh(new T.CylinderGeometry(.4, .48, 1.1, 12), mat);
+    body.position.y = 1.08;
+    body.castShadow = true;
+    group.add(body);
+    
+    const head = new T.Mesh(new T.SphereGeometry(.49, 14, 12), new T.MeshStandardMaterial({ color: 0xf5fbff, roughness: .2 }));
+    head.position.y = 1.96;
+    group.add(head);
+    
+    const visor = new T.Mesh(new T.SphereGeometry(.34, 12, 10), new T.MeshStandardMaterial({ color: 0x208ec7, emissive: 0x34d9f7, emissiveIntensity: .35, metalness: .8 }));
+    visor.position.set(0, 1.98, .27);
+    group.add(visor);
+    
+    const fur = [0xffc857, 0xf49ac2, 0xb990ff, 0x83dfb0, 0xff9a65][index % 5];
+    const animalMat = new T.MeshStandardMaterial({ color: fur, roughness: .55 });
+    group.scale.setScalar(1.28);
+    
+    for (const x of [-.38, .38]) {
+      const ear = new T.Mesh(new T.ConeGeometry(.27, .78, 8), animalMat);
+      ear.position.set(x, 2.72, 0);
+      group.add(ear);
+    }
+    
+    const muzzle = new T.Mesh(new T.SphereGeometry(.27, 10, 8), animalMat);
+    muzzle.position.set(0, 1.93, .46);
+    group.add(muzzle);
+    
+    const tail = new T.Mesh(new T.SphereGeometry(.31, 10, 8), animalMat);
+    tail.position.set(0, .95, -.62);
+    group.add(tail);
+  }
+
+  buildForestCrew(group, T, index) {
+    const colors = [0x8b7355, 0xa68a6d, 0x6b5344, 0x9d8569, 0x7a6049];
+    const leafColors = [0x4a7c59, 0x5d9c6b, 0x3f6b4d, 0x6bab78, 0x528a5f];
+    
+    // Tree trunk body
+    const trunk = new T.Mesh(
+      new T.CylinderGeometry(.35, .42, 1.3, 8),
+      new T.MeshStandardMaterial({ color: colors[index % 5], roughness: .75 })
+    );
+    trunk.position.y = .9;
+    trunk.castShadow = true;
+    group.add(trunk);
+    
+    // Crown (foliage)
+    const crown = new T.Mesh(
+      new T.SphereGeometry(.65, 10, 8),
+      new T.MeshStandardMaterial({ color: leafColors[index % 5], roughness: .6 })
+    );
+    crown.position.y = 2.1;
+    crown.castShadow = true;
+    group.add(crown);
+    
+    // Sprouts on crown
+    for (let j = 0; j < 3; j++) {
+      const angle = j / 3 * Math.PI * 2;
+      const sprout = new T.Mesh(
+        new T.ConeGeometry(.15, .4, 6),
+        new T.MeshStandardMaterial({ color: leafColors[index % 5] })
+      );
+      sprout.position.set(Math.cos(angle) * .4, 2.5, Math.sin(angle) * .4);
+      group.add(sprout);
+    }
+  }
+
+  buildRobotCrew(group, T, index) {
+    const colors = [0x7a8a9a, 0x9aa5b0, 0x6a7a8a, 0x8a9aaa, 0x7a8a9a];
+    
+    // Box body
+    const body = new T.Mesh(
+      new T.BoxGeometry(.7, 1, .6),
+      new T.MeshStandardMaterial({ color: colors[index % 5], metalness: .85, roughness: .2 })
+    );
+    body.position.y = 1.1;
+    body.castShadow = true;
+    group.add(body);
+    
+    // Screen on chest
+    const screen = new T.Mesh(
+      new T.PlaneGeometry(.4, .3),
+      new T.MeshBasicMaterial({ color: 0x4dffff })
+    );
+    screen.position.set(0, 1.2, .31);
+    group.add(screen);
+    
+    // Box head
+    const head = new T.Mesh(
+      new T.BoxGeometry(.5, .5, .5),
+      new T.MeshStandardMaterial({ color: colors[index % 5], metalness: .85, roughness: .2 })
+    );
+    head.position.y = 2;
+    group.add(head);
+    
+    // Eyes
+    for (const x of [-.15, .15]) {
+      const eye = new T.Mesh(
+        new T.SphereGeometry(.08, 8, 8),
+        new T.MeshBasicMaterial({ color: 0xffff4d })
+      );
+      eye.position.set(x, 2.05, .26);
+      group.add(eye);
+    }
+    
+    // Antenna
+    const antennaStem = new T.Mesh(
+      new T.CylinderGeometry(.03, .03, .5, 6),
+      new T.MeshStandardMaterial({ color: 0x555555, metalness: .9 })
+    );
+    antennaStem.position.y = 2.5;
+    group.add(antennaStem);
+    
+    const antennaBall = new T.Mesh(
+      new T.SphereGeometry(.1, 8, 8),
+      new T.MeshBasicMaterial({ color: 0xff4d4d })
+    );
+    antennaBall.position.y = 2.8;
+    group.add(antennaBall);
   }
 
   abduct(name) {
@@ -452,8 +634,13 @@ class UfoWorld {
     this.targetSlowMoFactor = 1.0;
     this.lockTarget = null;
     
+    const currentSequence = ++this.sequenceId;
+    
     let index = 0;
     const next = () => {
+      // Check if this sequence was cancelled
+      if (this.sequenceId !== currentSequence) return;
+      
       if (index >= names.length) {
         this.activeName = null;
         done?.();
@@ -467,6 +654,7 @@ class UfoWorld {
   }
 
   cancelScan() {
+    this.sequenceId++; // Cancel any pending callbacks
     this.scanActive = false;
     this.huntingPhase = 'idle';
     this.activeName = null;
