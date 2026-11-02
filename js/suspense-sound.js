@@ -98,53 +98,9 @@ export function setSoundEnabled(value) {
  * Start ambient background music
  */
 export function startAmbient() {
+  // Disabled: ambient drone was too annoying
+  // Keep this function for backward compatibility but do nothing
   stopAmbient();
-  if (!musicEnabled) return;
-  
-  const c = audio();
-  const now = c.currentTime;
-  
-  // Low drone
-  const osc1 = c.createOscillator();
-  osc1.type = 'sine';
-  osc1.frequency.setValueAtTime(55, now); // A1
-  
-  // Mid harmonic
-  const osc2 = c.createOscillator();
-  osc2.type = 'triangle';
-  osc2.frequency.setValueAtTime(110, now); // A2
-  
-  // High shimmer with slow LFO
-  const osc3 = c.createOscillator();
-  osc3.type = 'sine';
-  osc3.frequency.setValueAtTime(440, now); // A4
-  
-  const lfo = c.createOscillator();
-  lfo.type = 'sine';
-  lfo.frequency.setValueAtTime(0.3, now);
-  
-  const lfoGain = c.createGain();
-  lfoGain.gain.setValueAtTime(8, now);
-  
-  lfo.connect(lfoGain).connect(osc3.frequency);
-  
-  // Master gain
-  const gain = c.createGain();
-  gain.gain.setValueAtTime(0, now);
-  gain.gain.linearRampToValueAtTime(0.025, now + 2); // Fade in
-  
-  osc1.connect(gain);
-  osc2.connect(gain);
-  osc3.connect(gain);
-  gain.connect(c.destination);
-  
-  osc1.start(now);
-  osc2.start(now);
-  osc3.start(now);
-  lfo.start(now);
-  
-  ambientOsc = [osc1, osc2, osc3, lfo];
-  ambientGain = gain;
 }
 
 /**
