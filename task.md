@@ -26,9 +26,14 @@
 - [x] N1. Chép template AI Studio vào repo, giữ bản v10 cũ trong `legacy-v10/` để tham chiếu an toàn.
 - [x] N2. Đổi cấu hình sang React + TypeScript + Vite và xuất bản build tĩnh cho GitHub Pages.
 - [x] N3. Kiểm tra type-check, production build và 29 bài kiểm tra cũ đều đạt; kiểm tra trực quan đã thấy map 3D, UFO, trường, hang, hồ, hàng rào và nhân vật.
-- [ ] N4. Nạp quản lý lớp/học sinh bền vững cho nền mới.
-- [ ] N5. Nạp kho ảnh IndexedDB + sao lưu/khôi phục theo skill `game-image-upload`.
-- [ ] N6. Nạp Quiz/Flashcard và hai mode bắt lần lượt.
+- [ ] N4. Xóa âm “u u u” kéo dài khi UFO đã hút xong và đang chờ trả lời.
+- [ ] N5. Đặt Dark làm mặc định; chỉnh Light thành ban ngày dịu, thấy rõ UFO và nhân vật.
+- [ ] N6. Khôi phục bộ chọn quét `3 / 6 / 8 / 10 giây`, đồng hồ, nhạc kịch tính, UFO blink/tia quét và mục tiêu bí mật đến hết giờ.
+- [ ] N7. Thêm các cảnh trốn hài hước: nhào lộn, đào đất, nhảy nước, leo cây, chui bụi, nhảy hàng rào và núp hang.
+- [ ] N8. Nạp quản lý lớp/học sinh bền vững cho nền mới.
+- [ ] N9. Nạp kho ảnh IndexedDB + sao lưu/khôi phục theo skill `game-image-upload`.
+- [ ] N10. Nạp input bộ bài: điền từ thiếu, Flashcard và Quiz A/B/C/D.
+- [ ] N11. Nạp hai mode bắt lần lượt và lịch sử kết quả.
 
 ## Giai đoạn C — Quản lý lớp, học sinh, ảnh và skin
 - [ ] C1. Đặt Danh sách lớp + Phi hành đoàn ngoài màn chơi; bấm tên để tạm nghỉ/tham gia, có Bật tất cả.

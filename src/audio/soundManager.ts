@@ -55,41 +55,10 @@ class SoundManager {
     osc.stop(now + 0.75);
   }
 
-  // Ethereal tractor beam hum & chime
+  // The tractor-beam hum was deliberately removed: it continued while the
+  // teacher waited for an answer and made classroom use uncomfortable.
   public startTractorBeam() {
-    if (!this.enabled) return;
-    this.initCtx();
-    if (!this.ctx) return;
-
-    if (this.ufoOsc) {
-      try {
-        this.ufoOsc.stop();
-      } catch {
-        // ignore
-      }
-    }
-
-    const now = this.ctx.currentTime;
-    this.ufoOsc = this.ctx.createOscillator();
-    this.ufoGain = this.ctx.createGain();
-
-    this.ufoOsc.type = 'triangle';
-    this.ufoOsc.frequency.setValueAtTime(440, now);
-    // Vibrato effect
-    const lfo = this.ctx.createOscillator();
-    const lfoGain = this.ctx.createGain();
-    lfo.frequency.setValueAtTime(5.5, now);
-    lfoGain.gain.setValueAtTime(15, now);
-    lfo.connect(this.ufoOsc.frequency);
-    lfo.start(now);
-
-    this.ufoGain.gain.setValueAtTime(0.001, now);
-    this.ufoGain.gain.linearRampToValueAtTime(0.15, now + 0.3);
-
-    this.ufoOsc.connect(this.ufoGain);
-    this.ufoGain.connect(this.ctx.destination);
-
-    this.ufoOsc.start(now);
+    this.stopTractorBeam();
   }
 
   public stopTractorBeam() {

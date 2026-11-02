@@ -63,6 +63,31 @@ ufo-tram-goi-bai/
     └── game-engine.test.js    # Kiểm thử luật chơi bằng Node
 ```
 
+## 5. Tiến độ nền AI Studio và Phase ưu tiên hiện tại
+
+> Tài liệu thiết kế chi tiết: `.hermes/plans/2026-11-02_103000-ufo-classroom-quiz-image-system.md`. `task.md` chỉ đánh dấu xong khi Pages thật đã kiểm tra.
+
+### Đã có sau khi thay nền AI Studio
+- Map Three.js: UFO Boss, trường, hang, hồ/cầu, hàng rào, vườn và nhân vật mẫu.
+- Camera khu vực, chase camera và modal điền chữ mẫu.
+- Bản nền cũ giữ tại `legacy-v10/` để lấy lại các luật/hệ thống đã có mà template mới chưa mang sang.
+
+### Phase N — Sửa trải nghiệm trước khi nạp lớp và bài học
+
+**N1. Âm thanh:** Bỏ hoàn toàn tiếng “u u u” kéo dài lúc UFO đã hút xong/chờ câu trả lời. Chỉ giữ SFX ngắn và tiếng đúng/sai; tắt SFX phải dừng ngay.
+
+**N2. Theme:** Dark là mặc định và được lưu lại. Light chuyển thành ban ngày dịu, giảm độ chói của trời/cỏ, tăng tương phản để nhìn rõ nhân vật, UFO và tia quét.
+
+**N3. Cảnh quét:** Giáo viên chọn `3 / 6 / 8 / 10 giây`; đồng hồ đếm ngược rõ ràng. Mục tiêu được chọn bí mật, UFO blink và quét nhiều nơi; chỉ sau hết giờ mới đuổi/hút đúng mục tiêu.
+
+**N4. Cảnh trốn hài:** Sau N3, bổ sung theo từng điểm map có thật: nhào lộn, đào đất, chui bụi, leo cây, nhảy nước, nhảy hàng rào và núp hang. Không cho tất cả em làm cùng một động tác hoặc chạy quá nhanh thành vệt.
+
+**N5. Dữ liệu giáo viên:** Chỉ sau khi N1–N4 ổn định: quản lý lớp/học sinh → kho ảnh IndexedDB theo skill `game-image-upload` → input bài Điền từ thiếu/Flashcard/Quiz A-B-C-D → hai mode bắt lần lượt → backup/khôi phục.
+
+## 6. Các giai đoạn cũ và lịch sử thiết kế
+
+> Các mục bên dưới là kế hoạch ban đầu trước khi AI Studio template được nạp. Quyết định mới ở Phase N phía trên được ưu tiên khi có khác nhau.
+
 ## 5. Các giai đoạn
 
 ### Giai đoạn A — Tạo nền dự án và bản chạy đầu

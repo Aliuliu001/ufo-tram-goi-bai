@@ -14,6 +14,7 @@ export interface GameEngineCallbacks {
   onStateChange: (state: GameState) => void;
   onStudentSelected: (student: StudentData) => void;
   onBeamedComplete: (student: StudentData) => void;
+  onScanTick?: (secondsLeft: number) => void;
 }
 
 export class GameEngine {
@@ -53,6 +54,9 @@ export class GameEngine {
   private targetStudent: StudentActor | null = null;
   private chaseTimer: number = 0;
   private scanPhase: number = 0;
+  private scanDurationMs = 6000;
+  private scanDeadlineMs = 0;
+  private scanTickId: number | null = null;
   private phaseFallbackId: number | null = null;
 
   private clearPhaseFallback() {
@@ -60,13 +64,18 @@ export class GameEngine {
       window.clearTimeout(this.phaseFallbackId);
       this.phaseFallbackId = null;
     }
+    if (this.scanTickId !== null) {
+      window.clearInterval(this.scanTickId);
+      this.scanTickId = null;
+    }
   }
 
   private moveToChasePhase() {
     if (this.gameState !== 'SCANNING') return;
+    this.clearPhaseFallback();
+    this.callbacks.onScanTick?.(0);
     this.gameState = 'CHASING';
     this.callbacks.onStateChange('CHASING');
-    this.clearPhaseFallback();
     this.phaseFallbackId = window.setTimeout(() => this.moveToBeamPhase(), 6000);
   }
 
@@ -248,29 +257,34 @@ export class GameEngine {
   // PUBLIC CONTROLS & API
   // ----------------------------------------------------
 
-  public startChase(customTargetStudentId?: string) {
-    if (this.gameState === 'CHASING' || this.gameState === 'BEAMING' || this.gameState === 'QUIZ') return;
+  public startChase(customTargetStudentId?: string, scanSeconds = 6) {
+    if (this.gameState === 'SCANNING' || this.gameState === 'CHASING' || this.gameState === 'BEAMING' || this.gameState === 'QUIZ' || this.students.length === 0) return;
 
     this.clearPhaseFallback();
+    this.scanDurationMs = [3, 6, 8, 10].includes(scanSeconds) ? scanSeconds * 1000 : 6000;
+    this.scanDeadlineMs = Date.now() + this.scanDurationMs;
     this.gameState = 'SCANNING';
     this.callbacks.onStateChange('SCANNING');
     this.chaseTimer = 0;
     this.scanPhase = 0;
 
-    // Timer fallbacks make every classroom projector/browser advance the
-    // scene even when WebGL animation frames are throttled in the background.
-    this.phaseFallbackId = window.setTimeout(() => this.moveToChasePhase(), 3200);
-
-    // Pick target student
+    // The winner is chosen now but stays hidden until scanning has ended.
     if (customTargetStudentId) {
       this.targetStudent = this.students.find(s => s.data.id === customTargetStudentId) || this.students[0];
     } else {
       const randomIdx = Math.floor(Math.random() * this.students.length);
       this.targetStudent = this.students[randomIdx];
     }
-
     this.callbacks.onStudentSelected(this.targetStudent.data);
-    this.phaseFallbackId = window.setTimeout(() => this.moveToBeamPhase(), 9000);
+
+    const publishScanClock = () => {
+      const secondsLeft = Math.max(0, Math.ceil((this.scanDeadlineMs - Date.now()) / 1000));
+      this.callbacks.onScanTick?.(secondsLeft);
+      if (secondsLeft === 0) this.moveToChasePhase();
+    };
+    publishScanClock();
+    this.scanTickId = window.setInterval(publishScanClock, 125);
+    this.phaseFallbackId = window.setTimeout(() => this.moveToChasePhase(), this.scanDurationMs + 50);
   }
 
   public completeQuizSuccess() {
@@ -301,21 +315,25 @@ export class GameEngine {
   public setTheme(theme: 'light' | 'dark') {
     this.currentTheme = theme;
     if (theme === 'dark') {
-      this.targetBgColor.set(0x0f172a);
-      this.targetFogColor.set(0x0f172a);
-      this.targetSunColor.set(0xc7d2fe);
-      this.targetSunIntensity = 0.9;
-      this.targetHemiSky.set(0x312e81);
-      this.targetHemiGround.set(0x064e3b);
-      this.targetHemiIntensity = 0.55;
+      // Default presentation: night blue, but with enough fill light to read
+      // every student, path and hiding place from a classroom projector.
+      this.targetBgColor.set(0x16223b);
+      this.targetFogColor.set(0x1d2c49);
+      this.targetSunColor.set(0xdbeafe);
+      this.targetSunIntensity = 1.35;
+      this.targetHemiSky.set(0x475569);
+      this.targetHemiGround.set(0x14532d);
+      this.targetHemiIntensity = 0.82;
     } else {
-      this.targetBgColor.set(0xbbe1fa);
-      this.targetFogColor.set(0xbbe1fa);
-      this.targetSunColor.set(0xfffbeb);
-      this.targetSunIntensity = 2.2;
-      this.targetHemiSky.set(0xbae6fd);
-      this.targetHemiGround.set(0x4ade80);
-      this.targetHemiIntensity = 0.9;
+      // Soft daylight: deliberately muted so bright grass/sky do not wash out
+      // the small running characters and cyan UFO beam.
+      this.targetBgColor.set(0x9fb7c6);
+      this.targetFogColor.set(0x9fb7c6);
+      this.targetSunColor.set(0xffedd5);
+      this.targetSunIntensity = 1.55;
+      this.targetHemiSky.set(0xa7c0cd);
+      this.targetHemiGround.set(0x2f6b4f);
+      this.targetHemiIntensity = 0.72;
     }
   }
 
@@ -400,9 +418,6 @@ export class GameEngine {
       this.ufo.groundReticle.position.set(sweepX, 0.05, sweepZ);
       this.ufo.beamLight.intensity = 6;
 
-      if (this.chaseTimer > 3.0) {
-        this.moveToChasePhase();
-      }
     } else if (this.gameState === 'CHASING') {
       // UFO actively closes in on target student
       this.chaseTimer += delta;

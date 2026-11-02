@@ -16,13 +16,21 @@ export default function App() {
   const canvasMountRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
 
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      return localStorage.getItem('ufo-theme') === 'light' ? 'light' : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
   const [students, setStudents] = useState<StudentData[]>(INITIAL_STUDENTS as StudentData[]);
   const [activeStudentId, setActiveStudentId] = useState<string>(INITIAL_STUDENTS[0].id);
   const [gameState, setGameState] = useState<GameState>('IDLE');
   const [cameraMode, setCameraMode] = useState<CameraMode>('CHASE');
   const [manualControl, setManualControl] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [scanSeconds, setScanSeconds] = useState<3 | 6 | 8 | 10>(6);
+  const [scanSecondsLeft, setScanSecondsLeft] = useState<number>(6);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   // Phonics card state for when a student is beamed
@@ -62,6 +70,7 @@ export default function App() {
         // Advance to a fresh card
         setCardIndex((prev) => (prev + 1) % availableCards.length);
       },
+      onScanTick: setScanSecondsLeft,
     });
 
     engine.setTheme(theme);
@@ -83,6 +92,11 @@ export default function App() {
       document.documentElement.classList.remove('dark');
       document.body.classList.remove('dark');
     }
+    try {
+      localStorage.setItem('ufo-theme', theme);
+    } catch {
+      // Theme still works when browser storage is unavailable.
+    }
     engineRef.current?.setTheme(theme);
   }, [theme]);
 
@@ -99,7 +113,14 @@ export default function App() {
   };
 
   const handleStartChase = () => {
-    engineRef.current?.startChase();
+    setScanSecondsLeft(scanSeconds);
+    engineRef.current?.startChase(undefined, scanSeconds);
+    soundManager.playClick();
+  }; 
+
+  const handleSelectScanSeconds = (seconds: 3 | 6 | 8 | 10) => {
+    setScanSeconds(seconds);
+    setScanSecondsLeft(seconds);
     soundManager.playClick();
   };
 
@@ -167,6 +188,8 @@ export default function App() {
         cameraMode={cameraMode}
         manualControl={manualControl}
         soundEnabled={soundEnabled}
+        scanSeconds={scanSeconds}
+        scanSecondsLeft={scanSecondsLeft}
         students={students}
         activeStudentId={activeStudentId}
         selectedCategory={selectedCategory}
@@ -176,6 +199,7 @@ export default function App() {
         onSetCameraMode={handleSetCameraMode}
         onToggleManualControl={handleToggleManualControl}
         onToggleSound={handleToggleSound}
+        onSelectScanSeconds={handleSelectScanSeconds}
         onSelectStudent={handleSelectStudent}
         onSelectCategory={setSelectedCategory}
         onUpdateStudentName={handleUpdateStudentName}

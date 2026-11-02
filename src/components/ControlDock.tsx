@@ -12,6 +12,8 @@ interface ControlDockProps {
   cameraMode: CameraMode;
   manualControl: boolean;
   soundEnabled: boolean;
+  scanSeconds: 3 | 6 | 8 | 10;
+  scanSecondsLeft: number;
   students: StudentData[];
   activeStudentId: string;
   selectedCategory: string;
@@ -21,6 +23,7 @@ interface ControlDockProps {
   onSetCameraMode: (mode: CameraMode) => void;
   onToggleManualControl: (val: boolean) => void;
   onToggleSound: () => void;
+  onSelectScanSeconds: (seconds: 3 | 6 | 8 | 10) => void;
   onSelectStudent: (id: string) => void;
   onSelectCategory: (cat: string) => void;
   onUpdateStudentName: (id: string, newName: string) => void;
@@ -32,6 +35,8 @@ export const ControlDock: React.FC<ControlDockProps> = ({
   cameraMode,
   manualControl,
   soundEnabled,
+  scanSeconds,
+  scanSecondsLeft,
   students,
   activeStudentId,
   selectedCategory,
@@ -41,6 +46,7 @@ export const ControlDock: React.FC<ControlDockProps> = ({
   onSetCameraMode,
   onToggleManualControl,
   onToggleSound,
+  onSelectScanSeconds,
   onSelectStudent,
   onSelectCategory,
   onUpdateStudentName,
@@ -176,6 +182,27 @@ export const ControlDock: React.FC<ControlDockProps> = ({
               >
                 <span>{manualControl ? '🕹️ Player Control: ON' : '🤖 Auto Wander'}</span>
               </button>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 p-2">
+              <span className="px-1 text-[10px] font-extrabold uppercase tracking-wide text-slate-500 dark:text-slate-400">Quét</span>
+              {([3, 6, 8, 10] as const).map((seconds) => (
+                <button
+                  key={seconds}
+                  onClick={() => onSelectScanSeconds(seconds)}
+                  disabled={isBusy}
+                  className={`rounded-lg px-2 py-1 text-xs font-black transition-colors ${
+                    scanSeconds === seconds
+                      ? 'bg-cyan-500 text-slate-950'
+                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-cyan-100 dark:hover:bg-slate-700'
+                  } ${isBusy ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+                >
+                  {seconds}s
+                </button>
+              ))}
+              {gameState === 'SCANNING' && (
+                <span className="ml-1 rounded-md bg-amber-300 px-2 py-1 text-xs font-black text-slate-950">Còn {scanSecondsLeft}s</span>
+              )}
             </div>
 
             {/* Helper Key Bindings when manual is active */}
