@@ -3,6 +3,7 @@ import { createWorld3D } from './scene3d.js';
 import { chooseScanWinners, clampPickCount, scanTargetAt } from './scan-round.js';
 import { startChase, stopChase, ping, reveal, setMusicEnabled, setSfxEnabled, loadAudioPreferences, getAudioState } from './suspense-sound.js';
 import { UFO_SKINS, CREW_SKINS, getUfoSkin, getCrewSkin, loadSkinPreferences, saveSkinPreferences } from './skin-catalog.js';
+import { loadClasses, saveClasses, getActiveClass, createClass, updateClass, deleteClass, duplicateClass, exportClassesJSON, importClassesJSON, importClassesCSV } from './class-manager.js';
 
 const DEFAULT_STUDENTS = ['An Nhiên', 'Bảo Ngọc', 'Gia Hân', 'Minh Khang', 'Thanh Vy'];
 const $ = s => document.querySelector(s);
@@ -17,10 +18,17 @@ const el = {
   progress: $('#progress-fill'),
   progressLabel: $('#progress-label'),
   mission: $('#mission-text'),
+  classSelector: $('#class-selector'),
   settings: $('#settings-dialog'),
   settingsOpen: $('#settings-button'),
+  classTab: $('#class-tab'),
+  studentTab: $('#student-tab'),
+  classManagement: $('#class-management'),
   input: $('#students-input'),
   save: $('#save-students-button'),
+  exportBtn: $('#export-classes'),
+  importBtn: $('#import-classes'),
+  importFile: $('#import-file'),
   skinDialog: $('#skin-dialog'),
   skinOpen: $('#skin-button'),
   ufoSkinName: $('#ufo-skin-name'),
@@ -38,7 +46,7 @@ const el = {
   help: $('#scan-help')
 };
 
-let students = loadStudents();
+let students = [];
 let round = createRound(students);
 let world = null;
 let pickCount = 1;
@@ -46,6 +54,11 @@ let noRepeat = true;
 let seconds = 6;
 let scanning = false;
 let scanInterval = null;
+
+// Class management
+let classData = loadClasses();
+let activeClass = getActiveClass(classData.classes, classData.activeClassId);
+students = [...activeClass.students];
 
 // Load preferences
 const skinPrefs = loadSkinPreferences();
@@ -293,6 +306,209 @@ function renderCrewSkinGrid() {
 el.call.onclick = startScan;
 el.reset.onclick = reset;
 
+// Class management functions
+function renderClassSelector() {
+  if (!el.classSelector) return;
+  
+  el.classSelector.innerHTML = '';
+  classData.classes.forEach(cls => {
+    const option = document.createElement('option');
+    option.value = cls.id;
+    option.textContent = cls.name;
+    option.selected = cls.id === classData.activeClassId;
+    el.classSelector.appendChild(option);
+  });
+}
+
+function switchClass(classId) {
+  classData.activeClassId = classId;
+  activeClass = getActiveClass(classData.classes, classId);
+  students = [...activeClass.students];
+  
+  // Update lastUsed
+  classData.classes = updateClass(classData.classes, classId, {});
+  saveClasses(classData.classes, classData.activeClassId);
+  
+  // Reset round
+  round = createRound(students);
+  world?.setStudents(students);
+  
+  render();
+  renderClassSelector();
+}
+
+function renderClassManagement() {
+  if (!el.classManagement) return;
+  
+  el.classManagement.innerHTML = '';
+  
+  const header = document.createElement('div');
+  header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px';
+  
+  const title = document.createElement('h3');
+  title.textContent = 'Quản lý lớp';
+  title.style.cssText = 'margin:0;font-size:16px;font-weight:600';
+  
+  const addBtn = document.createElement('button');
+  addBtn.className = 'secondary-button';
+  addBtn.textContent = '+ Thêm lớp';
+  addBtn.onclick = () => {
+    const name = prompt('Tên lớp mới:', `Lớp ${classData.classes.length + 1}`);
+    if (name && name.trim()) {
+      const newClass = createClass(name.trim(), []);
+      classData.classes.push(newClass);
+      saveClasses(classData.classes, classData.activeClassId);
+      renderClassManagement();
+      renderClassSelector();
+    }
+  };
+  
+  header.appendChild(title);
+  header.appendChild(addBtn);
+  el.classManagement.appendChild(header);
+  
+  // Class list
+  classData.classes.forEach(cls => {
+    const card = document.createElement('div');
+    card.style.cssText = 'border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px;background:var(--panel)';
+    
+    const cardHeader = document.createElement('div');
+    cardHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px';
+    
+    const cardTitle = document.createElement('strong');
+    cardTitle.textContent = cls.name;
+    cardTitle.style.cssText = 'font-size:14px';
+    
+    const actions = document.createElement('div');
+    actions.style.cssText = 'display:flex;gap:6px';
+    
+    const editBtn = document.createElement('button');
+    editBtn.className = 'tiny-button';
+    editBtn.textContent = '✏️';
+    editBtn.title = 'Đổi tên';
+    editBtn.onclick = () => {
+      const newName = prompt('Tên lớp:', cls.name);
+      if (newName && newName.trim()) {
+        classData.classes = updateClass(classData.classes, cls.id, { name: newName.trim() });
+        saveClasses(classData.classes, classData.activeClassId);
+        renderClassManagement();
+        renderClassSelector();
+      }
+    };
+    
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'tiny-button';
+    copyBtn.textContent = '📋';
+    copyBtn.title = 'Sao chép';
+    copyBtn.onclick = () => {
+      classData.classes = duplicateClass(classData.classes, cls.id);
+      saveClasses(classData.classes, classData.activeClassId);
+      renderClassManagement();
+      renderClassSelector();
+    };
+    
+    const delBtn = document.createElement('button');
+    delBtn.className = 'tiny-button';
+    delBtn.textContent = '🗑️';
+    delBtn.title = 'Xóa';
+    delBtn.disabled = classData.classes.length <= 1;
+    delBtn.onclick = () => {
+      if (confirm(`Xóa lớp "${cls.name}"?`)) {
+        classData.classes = deleteClass(classData.classes, cls.id);
+        if (classData.activeClassId === cls.id) {
+          classData.activeClassId = classData.classes[0].id;
+          switchClass(classData.activeClassId);
+        }
+        saveClasses(classData.classes, classData.activeClassId);
+        renderClassManagement();
+        renderClassSelector();
+      }
+    };
+    
+    actions.appendChild(editBtn);
+    actions.appendChild(copyBtn);
+    actions.appendChild(delBtn);
+    
+    cardHeader.appendChild(cardTitle);
+    cardHeader.appendChild(actions);
+    
+    const studentCount = document.createElement('small');
+    studentCount.textContent = `${cls.students.length} học sinh`;
+    studentCount.style.cssText = 'color:var(--muted);font-size:12px';
+    
+    card.appendChild(cardHeader);
+    card.appendChild(studentCount);
+    el.classManagement.appendChild(card);
+  });
+  
+  // Import/Export section
+  const ioSection = document.createElement('div');
+  ioSection.style.cssText = 'margin-top:20px;padding-top:20px;border-top:1px solid var(--line)';
+  
+  const ioTitle = document.createElement('h3');
+  ioTitle.textContent = 'Sao lưu / Khôi phục';
+  ioTitle.style.cssText = 'margin:0 0 12px;font-size:14px;font-weight:600';
+  
+  const ioButtons = document.createElement('div');
+  ioButtons.style.cssText = 'display:flex;gap:8px';
+  
+  const exportBtn = document.createElement('button');
+  exportBtn.className = 'secondary-button';
+  exportBtn.textContent = '📥 Xuất JSON';
+  exportBtn.onclick = () => {
+    const json = exportClassesJSON(classData.classes);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ufo-classes-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  
+  const importBtn = document.createElement('button');
+  importBtn.className = 'secondary-button';
+  importBtn.textContent = '📤 Nhập JSON';
+  importBtn.onclick = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const result = importClassesJSON(ev.target.result);
+          if (result.success) {
+            if (confirm(`Nhập ${result.classes.length} lớp? (Sẽ thay thế dữ liệu hiện tại)`)) {
+              classData.classes = result.classes;
+              classData.activeClassId = result.classes[0].id;
+              saveClasses(classData.classes, classData.activeClassId);
+              switchClass(classData.activeClassId);
+              renderClassManagement();
+            }
+          } else {
+            alert(`Lỗi: ${result.error}`);
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+  
+  ioButtons.appendChild(exportBtn);
+  ioButtons.appendChild(importBtn);
+  
+  ioSection.appendChild(ioTitle);
+  ioSection.appendChild(ioButtons);
+  el.classManagement.appendChild(ioSection);
+}
+
+// Event handlers
+el.call.onclick = startScan;
+el.reset.onclick = reset;
+
 el.dec.onclick = () => {
   pickCount--;
   render();
@@ -326,8 +542,16 @@ $$('[data-camera]').forEach(b => {
   };
 });
 
+// Class selector
+if (el.classSelector) {
+  el.classSelector.onchange = () => {
+    switchClass(el.classSelector.value);
+  };
+}
+
 el.settingsOpen.onclick = () => {
   el.input.value = students.join('\n');
+  renderClassManagement();
   el.settings.showModal();
 };
 
@@ -336,7 +560,12 @@ el.save.onclick = e => {
   const next = el.input.value.split('\n').map(x => x.trim()).filter(Boolean);
   if (next.length) {
     students = [...new Set(next)];
-    saveStudents();
+    
+    // Update active class
+    classData.classes = updateClass(classData.classes, activeClass.id, { students });
+    activeClass.students = students;
+    saveClasses(classData.classes, classData.activeClassId);
+    
     el.settings.close();
     reset();
   }
@@ -392,6 +621,7 @@ window.addEventListener('keydown', e => {
 });
 
 // Initialize
+renderClassSelector();
 selectUfoSkin(ufoSkin.id);
 selectCrewSkin(crewSkin.id);
 setTimer(seconds);
