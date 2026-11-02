@@ -22,6 +22,14 @@
 - [x] B8. Viết và chạy kiểm tra tự động: giới hạn số lượng, không trùng, mục tiêu đổi khi dò, kết quả chỉ lộ sau đếm ngược.
 - [x] B9. Kiểm tra thật trên Pages: canvas 3D, 3 nút camera, 6/8/10 giây, bắt nhiều bạn cục bộ; trên Pages đã xác nhận Góc phố, dò 6 giây, giấu tên trong quá trình dò/hút rồi mới công bố và đánh dấu 1 bạn.
 
+## Nền mới AI Studio — map UFO 3D
+- [x] N1. Chép template AI Studio vào repo, giữ bản v10 cũ trong `legacy-v10/` để tham chiếu an toàn.
+- [x] N2. Đổi cấu hình sang React + TypeScript + Vite và xuất bản build tĩnh cho GitHub Pages.
+- [x] N3. Kiểm tra type-check, production build và 29 bài kiểm tra cũ đều đạt; kiểm tra trực quan đã thấy map 3D, UFO, trường, hang, hồ, hàng rào và nhân vật.
+- [ ] N4. Nạp quản lý lớp/học sinh bền vững cho nền mới.
+- [ ] N5. Nạp kho ảnh IndexedDB + sao lưu/khôi phục theo skill `game-image-upload`.
+- [ ] N6. Nạp Quiz/Flashcard và hai mode bắt lần lượt.
+
 ## Giai đoạn C — Quản lý lớp, học sinh, ảnh và skin
 - [ ] C1. Đặt Danh sách lớp + Phi hành đoàn ngoài màn chơi; bấm tên để tạm nghỉ/tham gia, có Bật tất cả.
 - [ ] C2. Tạo `⚙️ Quản lý` gồm tab Lớp học / Học sinh / Ảnh học sinh / Skin / Dữ liệu.
